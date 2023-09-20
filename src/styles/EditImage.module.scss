@@ -14,7 +14,9 @@
 }
 .edit_image_actions {
     width: 100%;
-    @include flex(center, space-between, 1rem);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
     .right {
         @include flex(center, start, 10px);
     }

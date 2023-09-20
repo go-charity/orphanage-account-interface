@@ -1,7 +1,12 @@
 import { modalActions } from "@/store/store";
-import { ModalReducerType, SelectorType } from "@/types";
+import {
+  ModalReducerType,
+  SelectorType,
+  SocialMediaHandleTypesType,
+} from "@/types";
 import {
   Alert,
+  Autocomplete,
   Avatar,
   Button,
   DialogActions,
@@ -16,10 +21,64 @@ import {
   Snackbar,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import css from "@/styles/EditIOrphanageAccountDetails.module.scss";
 import { socialMediaHandles } from "./OrphanageAccountDashboard";
+
+const AddNewSocialMediaHandler: FC = () => {
+  const [displayForm, setDisplayForm] = useState(false);
+  const availableTypes: SocialMediaHandleTypesType[] = [
+    "facebook",
+    "instagram",
+    "linkedin",
+    "twitter",
+    "whatsapp",
+  ];
+
+  if (!displayForm)
+    return (
+      <>
+        <Button color="primary" onClick={() => setDisplayForm(true)}>
+          Add new
+        </Button>
+      </>
+    );
+
+  return (
+    <>
+      <div className={css.add_new_social_media_handler}>
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={availableTypes}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Type"
+              placeholder="Enter the type of social media handle..."
+            />
+          )}
+          className={css.input}
+        />
+        <TextField
+          label="URL"
+          placeholder="Enter the URL to your handle..."
+          variant="outlined"
+          type="url"
+          className={css.input}
+        />
+
+        <div className={css.actions}>
+          <Button color="error" onClick={() => setDisplayForm(false)}>
+            Cancel
+          </Button>
+          <Button color="success">Add</Button>
+        </div>
+      </div>
+    </>
+  );
+};
 
 const EditOrphanageAccountDetails: React.FC<{ existingDetails: any }> = ({
   existingDetails,
@@ -115,7 +174,7 @@ const EditOrphanageAccountDetails: React.FC<{ existingDetails: any }> = ({
             </>
           ))}
         </List>
-        <Button color="primary">Add new</Button>
+        <AddNewSocialMediaHandler />
       </DialogContent>
       <DialogActions className={css.edit_details_actions}>
         <Button onClick={closeModal} color="error">

@@ -34,14 +34,16 @@ export default function RootLayout({
         />
       </head>
       <body className={poppins.className}>
-        <Header />
-        <main>
-          <div id="portal_dest"></div>
-          <ReduxStoreComponent>
-            <PortalComponent />
-            {children}
-          </ReduxStoreComponent>
-        </main>
+        <div className={"root"}>
+          <Header />
+          <main>
+            <div id="portal_dest"></div>
+            <ReduxStoreComponent>
+              <PortalComponent />
+              {children}
+            </ReduxStoreComponent>
+          </main>
+        </div>
       </body>
     </html>
   );

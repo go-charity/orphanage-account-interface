@@ -17,3 +17,5 @@ export type ModalReducerType = {
 export type SelectorType = {
   modal: ModalReducerType;
 };
+
+export type DescriptionType = { raw: string; text: string };

@@ -1,0 +1,36 @@
+@import "./config";
+
+.edit_location_title {
+}
+.edit_location_content {
+    width: 100%;
+    padding: 0 !important;
+    @include flex(center, center, auto, column);
+    .inner_content {
+        width: 100%;
+        padding: 1rem;
+        @include flex(center, center, auto, column);
+        .get_location {
+            background-color: $pink-900;
+            color: $pink-50;
+            &:hover {
+                background-color: lighten($pink-900, 10);
+                color: $pink-50;
+            }
+        }
+        .input {
+            width: 100%;
+        }
+    }
+
+    .map {
+        width: 100%;
+    }
+}
+.edit_location_actions {
+    width: 100%;
+    @include flex(center, space-between, 1rem);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}

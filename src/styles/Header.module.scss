@@ -42,4 +42,16 @@
             }
         }
     }
+    @include media(max, 600px) {
+        .logo_container {
+            .name {
+                display: none;
+            }
+        }
+        .right {
+            .profile_link_container {
+                display: none;
+            }
+        }
+    }
 }

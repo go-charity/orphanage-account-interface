@@ -9,7 +9,7 @@ import {
   IconButton,
   Snackbar,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import css from "@/styles/EditBgImgCover.module.scss";
 
@@ -26,6 +26,7 @@ const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
     undefined
   );
   const [uploadedFile, setUploadedFile] = useState<File | undefined>(undefined);
+  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
 
   const displayFileUploadError = (message: string) => {
     setFileUploadError({ display: true, message });
@@ -74,6 +75,10 @@ const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
     setUploadedFile(file);
     removeFileUploadError();
   };
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 500);
+  }, []);
 
   return (
     <>
@@ -127,7 +132,7 @@ const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
               onChange={uploadFile}
             />
             <div role="button" className={css.upload_img}>
-              Upload file
+              {isMobile ? "Upload" : "Upload file"}
             </div>
           </label>
 
@@ -136,7 +141,7 @@ const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
             disabled={(uploadedFile ? false : true) || fileUploadError.display}
             color="success"
           >
-            Save changes
+            {isMobile ? "Save" : "Save changes"}
           </Button>
         </div>
       </DialogActions>

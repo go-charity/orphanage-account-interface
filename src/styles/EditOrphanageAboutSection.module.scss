@@ -1,0 +1,19 @@
+@import "./config";
+
+.edit_description_title {
+}
+.edit_description_content {
+    width: 100%;
+    @include flex(start, start, 1rem, column);
+    .editor {
+        border: 1px solid lightgray;
+        border-radius: 5px;
+        height: 300px;
+    }
+}
+.edit_description_actions {
+    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
