@@ -1,0 +1,209 @@
+@import "./config";
+
+.orphanage_account_dashboard_page {
+    .orphanage_account_dashboard {
+        width: 100%;
+        @include flex(center, start, 1rem, column);
+        padding: 2rem;
+        & > div {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+    }
+
+    .analytics_section {
+        @include flex(start, center, 0.5rem, column);
+        span {
+            font-size: 12px;
+            &:first-of-type {
+                font-size: 14px;
+                font-weight: bold;
+            }
+            &:last-of-type {
+                font-weight: 100;
+            }
+        }
+    }
+    .profile_section {
+        padding: 0 !important;
+        overflow: hidden;
+        .img_section {
+            position: relative;
+            width: 100%;
+            height: 260px;
+            .bg_img_container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 200px;
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+                .edit {
+                    top: 1rem;
+                    right: 1rem;
+                }
+            }
+            .profile_img_container {
+                position: absolute;
+                left: 2rem;
+                bottom: 0;
+                img {
+                    width: 150px;
+                    height: 150px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    border: 4px solid white;
+                }
+                .edit {
+                    bottom: 2rem;
+                    right: 0;
+                }
+            }
+        }
+        .details_section {
+            position: relative;
+            padding: 0 1.5rem;
+            padding-bottom: 1.5rem;
+            @include flex(stretch, start, auto, row);
+            .left {
+                @include flex(start, start, 1rem, column);
+                flex: 1;
+                .name_container {
+                    @include flex(start, start, 0.2rem, column);
+                    .name {
+                        font-size: 20px;
+                        font-weight: bold;
+                    }
+                    .tagline {
+                        font-size: 14px;
+                    }
+                }
+                .external_links {
+                    @include flex(start, start, 0.5rem, column);
+                    .website {
+                        @include flex(center, start, 0.5rem);
+                        i {
+                            font-size: 20px;
+                            color: $pink-900;
+                        }
+                        a {
+                            font-size: 14px;
+                            color: $pink-500;
+                        }
+                    }
+                    .social_media_handles {
+                        @include flex(center, start, 1rem);
+                    }
+                }
+                .action {
+                    button {
+                        width: 170px;
+                        height: 40px;
+                        background: $pink-900;
+                        color: $pink-50;
+                        @include flex(center, start, 1rem);
+                        i {
+                            font-size: 20px;
+                        }
+                        span {
+                            font-size: 18px;
+                        }
+                    }
+                }
+            }
+            .right {
+                flex: 1;
+                @include flex(start, end, auto);
+            }
+            & > .edit {
+                top: -3.2rem;
+                right: 0.2rem;
+            }
+        }
+    }
+    .about_section {
+        @include flex(start, center, 0.5rem, column);
+        position: relative;
+        & > .edit {
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+        & > span {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        div {
+            font-size: 14px;
+            a.expand_link {
+                font-size: 14px;
+                font-weight: bold;
+                color: $pink-900;
+            }
+        }
+    }
+    .location_section {
+        @include flex(start, center, 0.5rem, column);
+        position: relative;
+        padding: 0 !important;
+        overflow: hidden;
+        & > .edit {
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 40px;
+            height: 40px;
+        }
+        & > span {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 1.5rem;
+            display: block;
+            padding-bottom: 0;
+        }
+        div {
+            width: 100%;
+            font-size: 14px;
+            .address {
+                @include flex(center, start, 1rem);
+                i {
+                    font-size: 18px;
+                }
+                color: $pink-900;
+                padding: 0 1.5rem;
+            }
+        }
+    }
+    .social_media_handle {
+        font-size: 26px;
+        color: $pink-900;
+        transition: 200ms;
+        &:hover {
+            transform: scale(1.2);
+            color: $pink-500;
+        }
+    }
+    .utilities {
+        @include flex(center, start, 1rem);
+        a {
+            width: 35px;
+            height: 35px;
+            @include flex(center, center, auto);
+            font-size: 18px;
+            background: $pink-900;
+            color: $pink-50;
+            border-radius: 50%;
+            transition: 200ms;
+            &:hover {
+                transform: scale(1.2);
+                background: $pink-200;
+                color: $pink-900;
+            }
+        }
+    }
+}

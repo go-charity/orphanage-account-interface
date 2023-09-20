@@ -1,0 +1,37 @@
+@import "./config.scss";
+
+.edit_icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: pointer;
+    transition: 200ms;
+    i {
+        font-size: 20px;
+        color: $pink-900;
+    }
+    &:hover {
+        transform: scale(1.1);
+    }
+    &.background,
+    &.inverted {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        @include flex(center, center, auto);
+    }
+    &.background {
+        background: $pink-300;
+        i {
+            font-size: 20px;
+            color: $pink-900;
+        }
+    }
+    &.inverted {
+        background: $pink-900;
+        i {
+            font-size: 20px;
+            color: $pink-300;
+        }
+    }
+}

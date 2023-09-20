@@ -1,0 +1,36 @@
+@import "./config";
+
+.edit_image_title {
+}
+.edit_image_content {
+    width: 100%;
+    @include flex(center, center, auto);
+    img {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+}
+.edit_image_actions {
+    width: 100%;
+    @include flex(center, space-between, 1rem);
+    .right {
+        @include flex(center, start, 10px);
+    }
+
+    div.upload_img {
+        padding: 9px 10px;
+        border-radius: 5px;
+        background-color: lighten(powderblue, 10);
+        color: darken(powderblue, 50);
+        font-size: 12px;
+        text-transform: uppercase;
+        transition: 200ms;
+        cursor: pointer;
+        &:hover {
+            background-color: darken(powderblue, 50);
+            color: lighten(powderblue, 10);
+        }
+    }
+}

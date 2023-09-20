@@ -1,0 +1,45 @@
+@import "./config";
+
+.header {
+    width: 100vw;
+    padding: 1rem;
+    background: $pink-50;
+    box-shadow: 0 0 4px rgba($pink-900, 0.4);
+    @include flex(center, space-between, 1rem);
+    .logo_container {
+        @include flex(center, center, 0.5rem);
+        .logo {
+            width: 50px;
+        }
+        .name {
+            @include flex(baseline, center, 0.1rem);
+            span {
+                font-size: 18px;
+                &:first-of-type {
+                    font-weight: bold;
+                    color: $pink-900;
+                    font-size: 20px;
+                }
+                &:last-of-type {
+                    color: $pink-300;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+    .right {
+        @include flex(center, start, 0.5rem);
+        .profile_link_container {
+            @include flex(center, center, 5px, column);
+            .profile_pic {
+                border-radius: 50%;
+                width: 35px;
+                height: 35px;
+                object-fit: cover;
+            }
+            span {
+                font-size: 12px;
+            }
+        }
+    }
+}

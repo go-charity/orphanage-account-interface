@@ -1,0 +1,38 @@
+@import "./config";
+
+.edit_details_title {
+}
+.edit_details_content {
+    width: 100%;
+    @include flex(start, start, 1rem, column);
+    .input {
+        min-width: 100%;
+    }
+    .list_item {
+        .actions {
+            @include flex(start, start, 0.5rem);
+            div {
+                @include flex(center, center, auto);
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: 200ms;
+                color: white;
+                &:hover {
+                    transform: scale(1.2);
+                }
+                &.edit {
+                    background: powderblue;
+                }
+                &.delete {
+                    background: orangered;
+                }
+            }
+        }
+    }
+}
+.edit_details_actions {
+    width: 100%;
+    @include flex(center, space-between, 1rem);
+}
