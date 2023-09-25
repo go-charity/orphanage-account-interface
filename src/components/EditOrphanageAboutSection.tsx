@@ -1,11 +1,13 @@
 import { modalActions } from "@/store/store";
 import { DescriptionType, ModalReducerType, SelectorType } from "@/types";
 import {
+  Alert,
   Button,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
+  Snackbar,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,32 +21,69 @@ import {
   ContentState,
 } from "draft-js";
 import htmlToDraft from "html-to-draftjs";
+import useAjaxRequest from "use-ajax-request";
+import { orphanageBackendInstance } from "@/utils/interceptors";
 
 const EditOrphanageAboutSection: React.FC<{
   existingDescription: DescriptionType;
 }> = ({ existingDescription }) => {
   const [description, setDescription] = useState<any>(undefined);
+  const [descriptionText, setDescriptionText] = useState("");
+  const [descriptionError, setDescriptionError] = useState<{
+    state: boolean;
+    message: string | undefined;
+  }>({ state: false, message: "" });
+  const aboutDetailsIsValid =
+    descriptionText
+      ?.trim()
+      ?.split(" ")
+      ?.filter((word) => word !== "")?.length >= 50;
   const modal = useSelector<SelectorType>(
     (state) => state.modal
   ) as ModalReducerType;
   const dispatch = useDispatch();
+  const {
+    sendRequest: updateAboutDetails,
+    data,
+    isError,
+    loading,
+    resetData,
+    resetError,
+  } = useAjaxRequest({
+    instance: orphanageBackendInstance,
+    config: {
+      url: "/v1/edit/about",
+      method: "PUT",
+    },
+  });
+
   const closeModal = () => {
     dispatch(modalActions.hide());
   };
 
   const onDescriptionChange = (editorState: EditorStateType) => {
     setDescription(editorState);
+    const raw = convertToRaw(editorState.getCurrentContent());
+    const text = raw.blocks.map((obj) => obj.text).join("");
+
+    setDescriptionText(text);
   };
 
-  const submitHandler = () => {
+  const saveChanges = async () => {
     const raw = convertToRaw(description.getCurrentContent());
-    console.log("RAW: ", raw);
-    console.log(
-      "ARR: ",
-      raw.blocks.map((obj) => obj.text)
-    );
-    console.log("STR: ", raw.blocks.map((obj) => obj.text).join(""));
-    closeModal();
+    const text = raw.blocks.map((obj) => obj.text).join("");
+
+    if (!aboutDetailsIsValid)
+      return setDescriptionError({
+        state: true,
+        message: "About details must be greater or equal to 50 words",
+      });
+
+    if (!loading)
+      await updateAboutDetails((res) => closeModal(), undefined, {
+        raw: raw,
+        text: text,
+      });
   };
 
   useEffect(() => {
@@ -53,6 +92,9 @@ const EditOrphanageAboutSection: React.FC<{
         const contentDraft = JSON.parse(existingDescription.raw);
         const contentState = convertFromRaw(contentDraft);
         setDescription(EditorState.createWithContent(contentState));
+        setDescriptionText(
+          contentDraft?.blocks?.map((obj: any) => obj?.text)?.join("")
+        );
       } catch (error: any) {
         const html = `<p>${existingDescription.text}</p>`;
         const contentBlock = htmlToDraft(html);
@@ -61,10 +103,12 @@ const EditOrphanageAboutSection: React.FC<{
             contentBlock.contentBlocks
           );
           setDescription(EditorState.createWithContent(contentState));
+          setDescriptionText(existingDescription.text);
         }
       }
     } else {
       setDescription(EditorState.createEmpty());
+      setDescriptionText("");
     }
   }, [existingDescription]);
 
@@ -98,15 +142,56 @@ const EditOrphanageAboutSection: React.FC<{
           editorClassName={css.editor}
           onEditorStateChange={onDescriptionChange}
         />
+        <div className={css.word_count}>
+          <span className={`${aboutDetailsIsValid ? css.more : css.less}`}>
+            {
+              descriptionText
+                ?.trim()
+                ?.split(" ")
+                ?.filter((word) => word !== "")?.length
+            }
+            /50
+          </span>
+        </div>
+        {descriptionError.state && (
+          <div className={css.error}>{descriptionError.message}</div>
+        )}
       </DialogContent>
       <DialogActions className={css.edit_description_actions}>
         <Button onClick={closeModal} color="error">
           Cancel
         </Button>
-        <Button onClick={submitHandler} color="success">
-          Save changes
+        <Button
+          onClick={saveChanges}
+          color="success"
+          disabled={loading || !aboutDetailsIsValid}
+        >
+          {loading ? "Saving..." : "Save changes"}
         </Button>
       </DialogActions>
+      {data && (
+        <Snackbar
+          open={data ? true : false}
+          autoHideDuration={1000 * 6}
+          onClose={resetData}
+        >
+          <Alert severity="success" onClose={resetData}>
+            About details updated successfully{" "}
+          </Alert>
+        </Snackbar>
+      )}
+      {isError && (
+        <Snackbar
+          open={isError}
+          autoHideDuration={1000 * 6}
+          onClose={resetError}
+        >
+          <Alert severity="error" onClose={resetError}>
+            Error updating about details. Please check your internet connection
+            and try again...
+          </Alert>
+        </Snackbar>
+      )}
     </>
   );
 };

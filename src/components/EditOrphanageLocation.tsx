@@ -1,30 +1,96 @@
 import { modalActions } from "@/store/store";
 import { ModalReducerType, SelectorType } from "@/types";
 import {
+  Alert,
   Autocomplete,
   Button,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
+  Snackbar,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import css from "@/styles/EditOrphanageLocation.module.scss";
 import { position } from "./OrphanageAccountDashboard";
+import useAjaxRequest from "use-ajax-request";
+import { orphanageBackendInstance } from "@/utils/interceptors";
 
 const EditOrphanageLocation: React.FC<{
   existingLocation: { lat: number; lng: number } | undefined;
 }> = ({ existingLocation }) => {
   const [places, setPlaces] = useState([]);
+  const [currentLocation, setCurrentLocation] = useState<
+    | {
+        lat: number;
+        lng: number;
+      }
+    | undefined
+  >(undefined);
+  const [geolocationError, setGeolocationError] = useState<{
+    state: boolean;
+    message: string | undefined;
+  }>({ state: false, message: undefined });
   const modal = useSelector<SelectorType>(
     (state) => state.modal
   ) as ModalReducerType;
   const dispatch = useDispatch();
+  const {
+    sendRequest: updateLocation,
+    data,
+    isError,
+    loading,
+    resetData,
+    resetError,
+  } = useAjaxRequest({
+    instance: orphanageBackendInstance,
+    config: {
+      url: "/v1/edit/location",
+      method: "PUT",
+      data: { lat: currentLocation?.lat, lng: currentLocation?.lng },
+    },
+  });
+
   const closeModal = () => {
     dispatch(modalActions.hide());
   };
+
+  const getLocation = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCurrentLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (err) => {
+          setGeolocationError({
+            state: true,
+            message:
+              err.message ||
+              "An error occurred while getting your location, please try again",
+          });
+        }
+      );
+    } else {
+      setGeolocationError({
+        state: true,
+        message:
+          "Your browser doesn't support geo-location, please login on a device that supports geo-location and edit your location",
+      });
+    }
+  };
+
+  const saveChanges = async () => {
+    if (!loading) await updateLocation((res) => closeModal());
+  };
+
+  useEffect(() => {
+    setCurrentLocation(existingLocation);
+  }, [existingLocation]);
 
   return (
     <>
@@ -53,6 +119,7 @@ const EditOrphanageLocation: React.FC<{
             variant="contained"
             color="primary"
             className={css.get_location}
+            onClick={getLocation}
           >
             Get my current location
           </Button>
@@ -75,9 +142,9 @@ const EditOrphanageLocation: React.FC<{
         <iframe
           src={
             "https://maps.google.com/maps?q=" +
-            position.lat +
+            currentLocation?.lat +
             "," +
-            position.lng +
+            currentLocation?.lng +
             "&t=&z=15&ie=UTF8&iwloc=&output=embed"
           }
           width="600"
@@ -94,10 +161,33 @@ const EditOrphanageLocation: React.FC<{
           Cancel
         </Button>
 
-        <Button onClick={closeModal} color="success">
-          Save changes
+        <Button onClick={saveChanges} disabled={loading} color="success">
+          {loading ? "Saving..." : "Save changes"}
         </Button>
       </DialogActions>
+      {data && (
+        <Snackbar
+          open={data ? true : false}
+          autoHideDuration={1000 * 6}
+          onClose={resetData}
+        >
+          <Alert severity="success" onClose={resetData}>
+            Location updated successfully{" "}
+          </Alert>
+        </Snackbar>
+      )}
+      {isError && (
+        <Snackbar
+          open={isError}
+          autoHideDuration={1000 * 6}
+          onClose={resetError}
+        >
+          <Alert severity="error" onClose={resetError}>
+            Error updating location. Please check your internet connection and
+            try again...
+          </Alert>
+        </Snackbar>
+      )}
     </>
   );
 };

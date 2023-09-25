@@ -12,6 +12,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import css from "@/styles/EditBgImgCover.module.scss";
+import useAjaxRequest from "use-ajax-request";
+import { orphanageBackendInstance } from "@/utils/interceptors";
 
 const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
   const modal = useSelector<SelectorType>(
@@ -27,6 +29,29 @@ const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
   );
   const [uploadedFile, setUploadedFile] = useState<File | undefined>(undefined);
   const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
+  const {
+    sendRequest: updateImage,
+    data: updateImageResponse,
+    error: updateImageError,
+    isError: updateImageHasError,
+    loading: updatingImage,
+    resetData: resetUpdateImageResponse,
+    resetError: resetUpdateImageError,
+  } = useAjaxRequest({
+    instance: orphanageBackendInstance,
+    config: {
+      url: "/v1/edit/bg_image",
+      method: "POST",
+      headers: {
+        ["Content-type"]: "multipart/formdata",
+      },
+    },
+    options: {
+      resetDataAfterSeconds: 6,
+      resetErrorAfterSeconds: 6,
+      resetDataOnSend: true,
+    },
+  });
 
   const displayFileUploadError = (message: string) => {
     setFileUploadError({ display: true, message });
@@ -42,6 +67,22 @@ const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
 
   const closeModal = () => {
     dispatch(modalActions.hide());
+  };
+
+  const saveChanges = async () => {
+    if (uploadedFile && !fileUploadError.display && !updatingImage) {
+      const requestData = new FormData();
+      requestData.append("image", uploadedFile);
+      await updateImage(
+        (res) => {
+          if (res.status === 200 || res.status === 201) {
+            closeModal();
+          }
+        },
+        undefined,
+        requestData
+      );
+    }
   };
 
   const uploadFile: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -137,14 +178,45 @@ const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
           </label>
 
           <Button
-            onClick={closeModal}
-            disabled={(uploadedFile ? false : true) || fileUploadError.display}
+            onClick={saveChanges}
+            disabled={
+              (uploadedFile ? false : true) ||
+              fileUploadError.display ||
+              updatingImage
+            }
             color="success"
           >
-            {isMobile ? "Save" : "Save changes"}
+            {updatingImage ? (
+              <>{isMobile ? "Saving" : "Saving changes"}</>
+            ) : (
+              <> {isMobile ? "Save" : "Save changes"}</>
+            )}
           </Button>
         </div>
       </DialogActions>
+      {updateImageResponse && (
+        <Snackbar
+          open={updateImageResponse ? true : false}
+          autoHideDuration={1000 * 10}
+          onClose={resetUpdateImageResponse}
+        >
+          <Alert onClose={resetUpdateImageResponse} severity="success">
+            Image updated successfully
+          </Alert>
+        </Snackbar>
+      )}
+      {updateImageError && (
+        <Snackbar
+          open={updateImageHasError}
+          autoHideDuration={1000 * 10}
+          onClose={resetUpdateImageError}
+        >
+          <Alert onClose={resetUpdateImageError} severity="error">
+            Image could not be uploaded, check your internet connection and try
+            again!
+          </Alert>
+        </Snackbar>
+      )}
     </>
   );
 };

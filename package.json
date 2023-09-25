@@ -18,6 +18,8 @@
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "@uiw/react-md-editor": "^3.23.5",
+    "axios": "^1.5.0",
+    "cookies-next": "^4.0.0",
     "draft-js": "^0.11.7",
     "html-to-draftjs": "^1.5.0",
     "next": "13.4.19",
@@ -29,7 +31,9 @@
     "redux": "^4.2.1",
     "rehype-sanitize": "^6.0.0",
     "sass": "^1.67.0",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "use-ajax-request": "^2.1.0",
+    "use-manage-form": "^2.1.1"
   },
   "devDependencies": {
     "@types/draftjs-to-html": "^0.8.1",

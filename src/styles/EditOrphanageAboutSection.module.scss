@@ -10,6 +10,19 @@
         border-radius: 5px;
         height: 300px;
     }
+    .word_count {
+        text-align: right;
+        width: 100%;
+        .less {
+            color: orangered;
+        }
+        .more {
+            color: green;
+        }
+    }
+    .error {
+        color: orangered;
+    }
 }
 .edit_description_actions {
     width: 100%;

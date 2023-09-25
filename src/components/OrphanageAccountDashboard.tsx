@@ -5,7 +5,7 @@ import dummyProfilePic from "@/assets/images/dummy-profile-pic.jpg";
 import bgImage from "@/assets/images/bg-image.jpg";
 import EditIcon from "./EditIcon";
 import { Button, Divider, Fab } from "@mui/material";
-import { SocialMediaHandleClass } from "@/utils";
+import { SocialMediaHandleClass } from "@/utils/utils";
 import { useDispatch } from "react-redux";
 import { modalActions } from "@/store/store";
 import EditBgImgCover from "./EditBgImgCover";
@@ -13,7 +13,7 @@ import EditImage from "./EditImage";
 import EditOrphanageAccountDetails from "./EditOrphanageAccountDetails";
 import EditOrphanageAboutSection from "./EditOrphanageAboutSection";
 import draftToHtml from "draftjs-to-html";
-import { DescriptionType } from "@/types";
+import { DescriptionType, UserDetailsType } from "@/types";
 import EditOrphanageLocation from "./EditOrphanageLocation";
 
 export const position = { lat: 6.5765376, lng: 3.3521664 };
@@ -156,7 +156,10 @@ const About: FC<{ desc: string }> = ({ desc }) => {
   );
 };
 
-const OrphanageAccountDashboard = () => {
+const OrphanageAccountDashboard: FC<{
+  userDetails: UserDetailsType;
+  isUser: boolean;
+}> = ({ userDetails, isUser }) => {
   const dispatch = useDispatch();
   const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
 
@@ -187,7 +190,19 @@ const OrphanageAccountDashboard = () => {
   const editDetails = () => {
     dispatch(
       modalActions.show({
-        children: <EditOrphanageAccountDetails existingDetails={{}} />,
+        children: (
+          <EditOrphanageAccountDetails
+            existingDetails={{
+              name: "Prince C. Onukwili",
+              phone_number: "090909088",
+              tagline: "Giving hope to needy children",
+              website: undefined,
+              social_media_handles: [
+                new SocialMediaHandleClass("facebook", "https://facebook.com"),
+              ],
+            }}
+          />
+        ),
         props: {
           maxWidth: !isMobile ? "sm" : "lg",
           open: true,
@@ -212,7 +227,11 @@ const OrphanageAccountDashboard = () => {
   const editLocation = () => {
     dispatch(
       modalActions.show({
-        children: <EditOrphanageLocation existingLocation={undefined} />,
+        children: (
+          <EditOrphanageLocation
+            existingLocation={{ lat: 3.7872, lng: 5.9862 }}
+          />
+        ),
         props: { maxWidth: "sm", open: true, fullWidth: true },
       })
     );
@@ -228,6 +247,7 @@ const OrphanageAccountDashboard = () => {
 
   useEffect(() => {
     setIsMobile(window.innerWidth <= 500);
+    console.log("DETAILS: ", userDetails);
   }, []);
 
   return (

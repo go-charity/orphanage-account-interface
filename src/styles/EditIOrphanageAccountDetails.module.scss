@@ -9,6 +9,12 @@
         min-width: 100%;
     }
     .list_item {
+        .avatar {
+            background: $pink-900;
+            i {
+                color: white;
+            }
+        }
         .actions {
             @include flex(start, start, 0.5rem);
             div {
@@ -53,6 +59,22 @@
 .add_new_social_media_handler {
     width: 100%;
     @include flex(start, start, 0.5rem, column);
+    .actions {
+        width: 100%;
+        @include flex(center, space-between, 1rem);
+    }
+}
+.edit_new_social_media_handler {
+    width: 100%;
+    @include flex(start, start, 0.5rem, column);
+    .type {
+        padding-bottom: 0.5rem;
+        text-transform: capitalize;
+        i {
+            font-size: 24px;
+            color: $pink-900;
+        }
+    }
     .actions {
         width: 100%;
         @include flex(center, space-between, 1rem);
