@@ -21,17 +21,18 @@ export type SelectorType = {
 
 export type DescriptionType = { raw: string; text: string };
 
-export type UserDetailsType = {
+export type OrphanageDetailsType = {
   name: string;
   tagline: string;
   phone_number: string;
   website: string;
   image: string;
   metadata: {
-    background_cover_image: string;
-    about: {
-      text: { blocks: any[]; [x: string]: any };
-    };
+    cover_image: string;
+  };
+  about: {
+    text: "";
+    raw: "";
   };
   social_media_handles: SocialMediaHandleClass[];
 };

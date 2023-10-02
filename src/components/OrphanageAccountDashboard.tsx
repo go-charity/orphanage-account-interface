@@ -13,7 +13,7 @@ import EditImage from "./EditImage";
 import EditOrphanageAccountDetails from "./EditOrphanageAccountDetails";
 import EditOrphanageAboutSection from "./EditOrphanageAboutSection";
 import draftToHtml from "draftjs-to-html";
-import { DescriptionType, UserDetailsType } from "@/types";
+import { DescriptionType, OrphanageDetailsType } from "@/types";
 import EditOrphanageLocation from "./EditOrphanageLocation";
 
 export const position = { lat: 6.5765376, lng: 3.3521664 };
@@ -156,10 +156,7 @@ const About: FC<{ desc: string }> = ({ desc }) => {
   );
 };
 
-const OrphanageAccountDashboard: FC<{
-  userDetails: UserDetailsType;
-  isUser: boolean;
-}> = ({ userDetails, isUser }) => {
+const OrphanageAccountDashboard: FC = () => {
   const dispatch = useDispatch();
   const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
 
@@ -247,7 +244,7 @@ const OrphanageAccountDashboard: FC<{
 
   useEffect(() => {
     setIsMobile(window.innerWidth <= 500);
-    console.log("DETAILS: ", userDetails);
+    // console.log("DETAILS: ", userDetails);
   }, []);
 
   return (
