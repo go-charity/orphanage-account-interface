@@ -80,3 +80,10 @@
         @include flex(center, space-between, 1rem);
     }
 }
+.placeholder {
+    width: 100%;
+    padding: 0 1rem;
+    text-align: center;
+    color: rgba(black, 0.3);
+    font-size: 18px !important;
+}

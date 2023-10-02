@@ -1,4 +1,4 @@
-import { modalActions } from "@/store/store";
+import { modalActions, orphanageDetailsActions } from "@/store/store";
 import { ModalReducerType, SelectorType } from "@/types";
 import {
   Alert,
@@ -14,8 +14,11 @@ import { useSelector, useDispatch } from "react-redux";
 import css from "@/styles/EditBgImgCover.module.scss";
 import useAjaxRequest from "use-ajax-request";
 import { orphanageBackendInstance } from "@/utils/interceptors";
+import bgImg from "@/assets/images/bg-image.jpg";
 
-const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
+const EditBgImgCover: React.FC<{ existingImg: string | undefined }> = ({
+  existingImg,
+}) => {
   const modal = useSelector<SelectorType>(
     (state) => state.modal
   ) as ModalReducerType;
@@ -41,7 +44,7 @@ const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
     instance: orphanageBackendInstance,
     config: {
       url: "/v1/edit/bg_image",
-      method: "POST",
+      method: "PATCH",
       headers: {
         ["Content-type"]: "multipart/formdata",
       },
@@ -76,6 +79,9 @@ const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
       await updateImage(
         (res) => {
           if (res.status === 200 || res.status === 201) {
+            dispatch(
+              orphanageDetailsActions.editCoverImage(uploadedImage || "")
+            );
             closeModal();
           }
         },
@@ -143,7 +149,10 @@ const EditBgImgCover: React.FC<{ existingImg: string }> = ({ existingImg }) => {
         <i className="fas fa-xmark" />
       </IconButton>
       <DialogContent className={css.edit_bg_img_cover_content} dividers>
-        <img src={uploadedImage || existingImg} alt="bg img cover" />
+        <img
+          src={uploadedImage || existingImg || bgImg.src}
+          alt="bg img cover"
+        />
         {fileUploadError.display && (
           <>
             <Snackbar

@@ -1,4 +1,4 @@
-import { modalActions } from "@/store/store";
+import { modalActions, orphanageDetailsActions } from "@/store/store";
 import { DescriptionType, ModalReducerType, SelectorType } from "@/types";
 import {
   Alert,
@@ -25,7 +25,7 @@ import useAjaxRequest from "use-ajax-request";
 import { orphanageBackendInstance } from "@/utils/interceptors";
 
 const EditOrphanageAboutSection: React.FC<{
-  existingDescription: DescriptionType;
+  existingDescription: DescriptionType | undefined;
 }> = ({ existingDescription }) => {
   const [description, setDescription] = useState<any>(undefined);
   const [descriptionText, setDescriptionText] = useState("");
@@ -53,7 +53,7 @@ const EditOrphanageAboutSection: React.FC<{
     instance: orphanageBackendInstance,
     config: {
       url: "/v1/edit/about",
-      method: "PUT",
+      method: "PATCH",
     },
   });
 
@@ -80,14 +80,27 @@ const EditOrphanageAboutSection: React.FC<{
       });
 
     if (!loading)
-      await updateAboutDetails((res) => closeModal(), undefined, {
-        raw: raw,
-        text: text,
-      });
+      await updateAboutDetails(
+        (res) => {
+          aboutDetailsIsValid &&
+            dispatch(
+              orphanageDetailsActions.editAbout({
+                raw: JSON.stringify(raw),
+                text: text,
+              })
+            );
+          closeModal();
+        },
+        undefined,
+        {
+          raw: JSON.stringify(raw),
+          text: text,
+        }
+      );
   };
 
   useEffect(() => {
-    if (existingDescription.raw || existingDescription.text) {
+    if (existingDescription?.raw || existingDescription?.text) {
       try {
         const contentDraft = JSON.parse(existingDescription.raw);
         const contentState = convertFromRaw(contentDraft);

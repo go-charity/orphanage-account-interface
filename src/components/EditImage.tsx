@@ -1,4 +1,4 @@
-import { modalActions } from "@/store/store";
+import { modalActions, orphanageDetailsActions } from "@/store/store";
 import { ModalReducerType, SelectorType } from "@/types";
 import {
   Alert,
@@ -14,8 +14,11 @@ import { useSelector, useDispatch } from "react-redux";
 import css from "@/styles/EditImage.module.scss";
 import useAjaxRequest from "use-ajax-request";
 import { orphanageBackendInstance } from "@/utils/interceptors";
+import dummyPic from "@/assets/images/dummy-profile-pic.jpg";
 
-const EditImage: React.FC<{ existingImg: string }> = ({ existingImg }) => {
+const EditImage: React.FC<{ existingImg: string | undefined }> = ({
+  existingImg,
+}) => {
   const modal = useSelector<SelectorType>(
     (state) => state.modal
   ) as ModalReducerType;
@@ -41,7 +44,7 @@ const EditImage: React.FC<{ existingImg: string }> = ({ existingImg }) => {
     instance: orphanageBackendInstance,
     config: {
       url: "/v1/edit/image",
-      method: "POST",
+      method: "PATCH",
       headers: {
         ["Content-type"]: "multipart/formdata",
       },
@@ -108,6 +111,7 @@ const EditImage: React.FC<{ existingImg: string }> = ({ existingImg }) => {
       await updateImage(
         (res) => {
           if (res.status === 200 || res.status === 201) {
+            dispatch(orphanageDetailsActions.editImage(uploadedImage || ""));
             closeModal();
           }
         },
@@ -143,7 +147,10 @@ const EditImage: React.FC<{ existingImg: string }> = ({ existingImg }) => {
         <i className="fas fa-xmark" />
       </IconButton>
       <DialogContent className={css.edit_image_content} dividers>
-        <img src={uploadedImage || existingImg} alt="bg img cover" />
+        <img
+          src={uploadedImage || existingImg || dummyPic.src}
+          alt="bg img cover"
+        />
       </DialogContent>
       <DialogActions className={css.edit_image_actions}>
         <Button onClick={closeModal} color="error">

@@ -1,4 +1,4 @@
-import { modalActions } from "@/store/store";
+import { modalActions, orphanageDetailsActions } from "@/store/store";
 import { ModalReducerType, SelectorType } from "@/types";
 import {
   Alert,
@@ -48,8 +48,12 @@ const EditOrphanageLocation: React.FC<{
     instance: orphanageBackendInstance,
     config: {
       url: "/v1/edit/location",
-      method: "PUT",
-      data: { lat: currentLocation?.lat, lng: currentLocation?.lng },
+      method: "PATCH",
+      data: {
+        lat: currentLocation?.lat,
+        lng: currentLocation?.lng,
+        metadata: { address: "157 candos road." },
+      },
     },
   });
 
@@ -85,7 +89,17 @@ const EditOrphanageLocation: React.FC<{
   };
 
   const saveChanges = async () => {
-    if (!loading) await updateLocation((res) => closeModal());
+    if (!loading)
+      await updateLocation((res) => {
+        currentLocation &&
+          dispatch(
+            orphanageDetailsActions.editLocation({
+              ...currentLocation,
+              metadata: { address: "157, Candos road, Baruwa" },
+            })
+          );
+        closeModal();
+      });
   };
 
   useEffect(() => {
@@ -139,29 +153,35 @@ const EditOrphanageLocation: React.FC<{
             )}
           /> */}
         </div>
-        <iframe
-          src={
-            "https://maps.google.com/maps?q=" +
-            currentLocation?.lat +
-            "," +
-            currentLocation?.lng +
-            "&t=&z=15&ie=UTF8&iwloc=&output=embed"
-          }
-          width="600"
-          height="600"
-          style={{ border: 0 }}
-          className={css.map}
-          loading="lazy"
-          {...{ referrerpolicy: "no-referrer-when-downgrade" }}
-          title="map"
-        ></iframe>
+        {currentLocation && (
+          <iframe
+            src={
+              "https://maps.google.com/maps?q=" +
+              currentLocation?.lat +
+              "," +
+              currentLocation?.lng +
+              "&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            }
+            width="600"
+            height="600"
+            style={{ border: 0 }}
+            className={css.map}
+            loading="lazy"
+            {...{ referrerpolicy: "no-referrer-when-downgrade" }}
+            title="map"
+          ></iframe>
+        )}
       </DialogContent>
       <DialogActions className={css.edit_location_actions}>
         <Button onClick={closeModal} color="error">
           Cancel
         </Button>
 
-        <Button onClick={saveChanges} disabled={loading} color="success">
+        <Button
+          onClick={saveChanges}
+          disabled={loading || !currentLocation}
+          color="success"
+        >
           {loading ? "Saving..." : "Save changes"}
         </Button>
       </DialogActions>
