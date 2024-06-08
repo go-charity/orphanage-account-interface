@@ -1,0 +1,24 @@
+@import "./config.scss";
+
+.error_page {
+    @include flex(center, start, 10px, column);
+    img {
+        width: 400px;
+        height: 400px;
+        object-fit: contain;
+    }
+    .content {
+        font-weight: 400;
+        font-size: 30px;
+    }
+
+    @include media(max, 450px) {
+        img {
+            width: 90vw;
+            height: 90vw;
+        }
+        .content {
+            font-size: 20px;
+        }
+    }
+}
