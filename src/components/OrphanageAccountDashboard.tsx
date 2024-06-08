@@ -127,7 +127,7 @@ const about = {
 };
 const About: FC<{ desc: string }> = ({ desc }) => {
   const [expanded, setExpanded] = useState(false);
-  const [descState, setDescState] = useState(desc.slice(0, 600));
+  const [descState, setDescState] = useState(desc?.slice(0, 600));
 
   return (
     <>
@@ -216,7 +216,7 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
         children: (
           <EditOrphanageAccountDetails
             existingDetails={{
-              name: orphanageDetails.details.name,
+              fullname: orphanageDetails.details.fullname,
               phone_number: orphanageDetails.details.phone_number,
               tagline: orphanageDetails.details.tagline,
               website: orphanageDetails.details.website,
@@ -359,26 +359,32 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
                 }
                 alt="Background"
               />
-              <EditIcon
-                className={css.edit}
-                background
-                onClick={editBgImageCover}
-              />
+              {orphanageDetails.metadata.isUser && (
+                <EditIcon
+                  className={css.edit}
+                  background
+                  onClick={editBgImageCover}
+                />
+              )}
             </div>
             <div className={css.profile_img_container}>
               <img
                 src={orphanageDetails.details.image || dummyProfilePic.src}
-                alt={orphanageDetails.details.name}
+                alt={orphanageDetails.details.fullname}
               />
-              <EditIcon className={css.edit} background onClick={editImage} />
+              {orphanageDetails.metadata.isUser && (
+                <EditIcon className={css.edit} background onClick={editImage} />
+              )}
             </div>
           </div>
           <div className={css.details_section}>
-            <EditIcon className={css.edit} background onClick={editDetails} />
+            {orphanageDetails.metadata.isUser && (
+              <EditIcon className={css.edit} background onClick={editDetails} />
+            )}
             <div className={css.left}>
               <div className={css.name_container}>
                 <span className={css.name}>
-                  {orphanageDetails.details.name}
+                  {orphanageDetails.details.fullname}
                 </span>
                 <span className={css.tagline}>
                   {orphanageDetails.details.tagline}
@@ -404,11 +410,13 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
               <div className={css.utilities_container}>
                 <Utilities ref={mobileUtilityRef} format="horizontal" />
               </div>
-              <div className={css.action}>
-                <Button variant="contained">
-                  <i className="fa-solid fa-hand-holding-dollar"></i> Donate
-                </Button>
-              </div>
+              {!orphanageDetails.metadata.isUser && (
+                <div className={css.action}>
+                  <Button variant="contained">
+                    <i className="fa-solid fa-hand-holding-dollar"></i> Donate
+                  </Button>
+                </div>
+              )}
             </div>
             <div className={css.right}>
               <Utilities ref={mainUtilityRef} />
@@ -416,7 +424,9 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
           </div>
         </div>
         <div className={css.about_section} id="about">
-          <EditIcon className={css.edit} background onClick={editAbout} />
+          {orphanageDetails.metadata.isUser && (
+            <EditIcon className={css.edit} background onClick={editAbout} />
+          )}
           <span>About</span>
           {orphanageDetails?.details?.about ? (
             <About
@@ -431,7 +441,9 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
           )}
         </div>
         <div className={css.location_section}>
-          <EditIcon className={css.edit} background onClick={editLocation} />
+          {orphanageDetails.metadata.isUser && (
+            <EditIcon className={css.edit} background onClick={editLocation} />
+          )}
           <span>Location</span>
           <div className={css.map_container}>
             {orphanageDetails.details.location?.metadata?.address ? (

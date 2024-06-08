@@ -13,7 +13,7 @@ const initialState: OrphanageDetailsReducerType = {
     about: undefined,
     image: undefined,
     metadata: { cover_image: undefined },
-    name: undefined,
+    fullname: undefined,
     phone_number: undefined,
     social_media_handles: [],
     tagline: undefined,
@@ -23,6 +23,7 @@ const initialState: OrphanageDetailsReducerType = {
   metadata: {
     fetching: undefined,
     errorFetching: undefined,
+    isUser: undefined,
   },
 };
 
@@ -36,7 +37,7 @@ const orphanageDetailsSlice = createSlice({
     ) => {
       state.details.about = payload.about;
       state.details.image = payload.image;
-      state.details.name = payload.name;
+      state.details.fullname = payload.fullname;
       state.details.phone_number = payload.phone_number;
       state.details.social_media_handles = payload.social_media_handles;
       state.details.location = payload.location;
@@ -54,7 +55,7 @@ const orphanageDetailsSlice = createSlice({
       state.details.image = payload;
     },
     editName: (state, { payload }: { payload: string }) => {
-      state.details.name = payload;
+      state.details.fullname = payload;
     },
     editPhoneNumber: (state, { payload }: { payload: string }) => {
       state.details.phone_number = payload;
@@ -101,6 +102,9 @@ const orphanageDetailsSlice = createSlice({
     toogleFetching: (state, { payload }: { payload: boolean }) => {
       state.metadata.fetching = payload;
     },
+    toogleIsUser: (state, { payload }: { payload: boolean }) => {
+      state.metadata.isUser = payload;
+    },
     toogleError: (
       state,
       {
@@ -121,6 +125,7 @@ export const fetchOrphanageDetailsAction = (id: string) => {
   return async (dispatch: Dispatch<AnyAction>) => {
     // Set the loading state to true and the error state to false
     dispatch(orphanageDetailsActions.toogleFetching(true));
+    dispatch(orphanageDetailsActions.toogleIsUser(false));
     dispatch(
       orphanageDetailsActions.toogleError({ state: false, error: undefined })
     );
@@ -133,18 +138,31 @@ export const fetchOrphanageDetailsAction = (id: string) => {
 
       // If it returns a success response
       if (response.status === 200) {
-        // Set the loading and error states to false and fill up the orphanage details with the response data
+        // Set the loading, isUser and error states to false and fill up the orphanage details with the response data
         dispatch(orphanageDetailsActions.fillUserDetails(response.data));
         dispatch(orphanageDetailsActions.toogleFetching(false));
+        dispatch(
+          orphanageDetailsActions.toogleIsUser(
+            (response.headers?.["is-user"] === "true" ? true : false) || false
+          )
+        );
         dispatch(
           orphanageDetailsActions.toogleError({
             state: false,
             error: undefined,
           })
         );
+        console.log(
+          "Header value: ",
+          response.status,
+          response?.config,
+          response.headers,
+          response.headers.toJSON && (response as any).headers.toJSON()
+        );
       } else {
         // Set the loading state to false, but the error state to true
         dispatch(orphanageDetailsActions.toogleFetching(false));
+        dispatch(orphanageDetailsActions.toogleIsUser(false));
         dispatch(
           orphanageDetailsActions.toogleError({
             state: true,
@@ -155,6 +173,7 @@ export const fetchOrphanageDetailsAction = (id: string) => {
     } catch (error: any) {
       // Set the loading state to false, but the error state to true
       dispatch(orphanageDetailsActions.toogleFetching(false));
+      dispatch(orphanageDetailsActions.toogleIsUser(false));
       console.error("ERR: ", error);
       dispatch(
         orphanageDetailsActions.toogleError({

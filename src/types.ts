@@ -23,7 +23,7 @@ export type SelectorType = {
 export type DescriptionType = { raw: string; text: string };
 
 export type OrphanageDetailsType = {
-  name: string | undefined;
+  fullname: string | undefined;
   tagline: string | undefined;
   phone_number: string | undefined;
   website: string | undefined;
@@ -51,6 +51,7 @@ export type OrphanageDetailsReducerType = {
           error: { status: number; message: string } | undefined;
         }
       | undefined;
+    isUser: boolean | undefined;
   };
 };
 

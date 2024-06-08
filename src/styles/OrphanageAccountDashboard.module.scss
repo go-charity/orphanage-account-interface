@@ -215,6 +215,9 @@
                 color: $pink-900;
             }
         }
+        ul {
+            margin-left: 1rem;
+        }
     }
     .location_section {
         @include flex(start, center, 0.5rem, column);

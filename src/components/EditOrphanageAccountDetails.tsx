@@ -72,7 +72,7 @@ const AddNewSocialMediaHandle: FC = () => {
     instance: orphanageBackendInstance,
     config: {
       method: "PUT",
-      url: "/v1/edit/social_media_handles",
+      url: "/v1/edit/social-media-handles",
       data: [
         {
           type: handleType,
@@ -442,6 +442,12 @@ const SocialMediaHandlesSection: FC<{
     socialMediaHandle: SocialMediaHandleClass | undefined;
     display: boolean;
   }>({ socialMediaHandle: undefined, display: false });
+
+  const social_media_handles = useSelector<
+    SelectorType,
+    SocialMediaHandleClass[]
+  >((state) => state.orphanageDetails.details.social_media_handles);
+
   return (
     <>
       <h5>SOCIAL MEDIA HANDLES</h5>
@@ -449,7 +455,7 @@ const SocialMediaHandlesSection: FC<{
         <List
           sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
         >
-          {socialMediaHandles.map((handle, i) => (
+          {social_media_handles.map((handle, i) => (
             <>
               <SocialMediaHandleItem
                 socialMediaHandle={handle}
@@ -475,7 +481,7 @@ const SocialMediaHandlesSection: FC<{
 
 const EditOrphanageAccountDetails: FC<{
   existingDetails: {
-    name: string | undefined;
+    fullname: string | undefined;
     phone_number: string | undefined;
     tagline: string | undefined;
     website: string | undefined;
@@ -588,7 +594,7 @@ const EditOrphanageAccountDetails: FC<{
   };
 
   useEffect(() => {
-    onNameChange(existingDetails?.name);
+    onNameChange(existingDetails?.fullname);
     onTaglineChange(existingDetails?.tagline);
     onPhoneNumberChange(existingDetails?.phone_number);
     onWebsiteChange(existingDetails?.website);

@@ -27,32 +27,32 @@ orphanageBackendInstance.interceptors.request.use(
 
 orphanageBackendInstance.interceptors.response.use(
   (res) => {
-    res.headers["Access-token"] &&
-      setCookie("access_token", res.headers["Access-token"], {
-        path: "/",
-        domain: process.env.NEXT_PUBLIC_GOCHARITY_API_DOMAIN,
-        httpOnly: false,
-        secure: true,
-      });
-    res.headers["Refresh-token"] &&
-      setCookie("refresh_token", res.headers["Refresh-token"], {
-        path: "/",
-        domain: process.env.NEXT_PUBLIC_GOCHARITY_API_DOMAIN,
-        httpOnly: false,
-        secure: true,
-      });
-    res.headers["Access-token"] &&
-      setCookie("local_access_token", res.headers["Access-token"], {
-        path: "/",
-        httpOnly: false,
-        secure: true,
-      });
-    res.headers["Refresh-token"] &&
-      setCookie("local_refresh_token", res.headers["Refresh-token"], {
-        path: "/",
-        httpOnly: false,
-        secure: true,
-      });
+    // res.headers["Access-token"] &&
+    //   setCookie("access_token", res.headers["Access-token"], {
+    //     path: "/",
+    //     domain: process.env.NEXT_PUBLIC_GOCHARITY_API_DOMAIN,
+    //     httpOnly: false,
+    //     secure: true,
+    //   });
+    // res.headers["Refresh-token"] &&
+    //   setCookie("refresh_token", res.headers["Refresh-token"], {
+    //     path: "/",
+    //     domain: process.env.NEXT_PUBLIC_GOCHARITY_API_DOMAIN,
+    //     httpOnly: false,
+    //     secure: true,
+    //   });
+    // res.headers["Access-token"] &&
+    //   setCookie("local_access_token", res.headers["Access-token"], {
+    //     path: "/",
+    //     httpOnly: false,
+    //     secure: true,
+    //   });
+    // res.headers["Refresh-token"] &&
+    //   setCookie("local_refresh_token", res.headers["Refresh-token"], {
+    //     path: "/",
+    //     httpOnly: false,
+    //     secure: true,
+    //   });
     return res;
   },
   (err) => {
