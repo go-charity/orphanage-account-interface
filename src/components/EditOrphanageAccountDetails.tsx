@@ -1,4 +1,4 @@
-import { modalActions } from "@/store/store";
+import { modalActions, orphanageDetailsActions } from "@/store/store";
 import {
   ModalReducerType,
   SelectorType,
@@ -31,6 +31,7 @@ import { orphanageBackendInstance } from "@/utils/interceptors";
 
 const AddNewSocialMediaHandle: FC = () => {
   const [displayForm, setDisplayForm] = useState(false);
+  const dispatch = useDispatch();
   const {
     value: handleType,
     isValid: typeIsValid,
@@ -38,7 +39,7 @@ const AddNewSocialMediaHandle: FC = () => {
     onChange: onTypeChange,
     onBlur: onTypeBlur,
     reset: resetType,
-  } = useInput<string>((value) =>
+  } = useInput<SocialMediaHandleTypesType>((value) =>
     value
       ? /(twitter|facebook|linkedin|whatsapp|instagram)/i.test(value?.trim())
       : false
@@ -71,7 +72,7 @@ const AddNewSocialMediaHandle: FC = () => {
     instance: orphanageBackendInstance,
     config: {
       method: "PUT",
-      url: "/v1/edit/social_media_handle",
+      url: "/v1/edit/social-media-handles",
       data: [
         {
           type: handleType,
@@ -88,7 +89,18 @@ const AddNewSocialMediaHandle: FC = () => {
   const addHandle = async () => {
     if (!formIsValid) return executeBlurHandlers();
 
-    if (!loading) await createHandle((res) => setDisplayForm(false));
+    if (!loading)
+      await createHandle((res) => {
+        handleType &&
+          link &&
+          dispatch(
+            orphanageDetailsActions.addSocialMediaHandle({
+              type: handleType,
+              link: link,
+            })
+          );
+        setDisplayForm(false);
+      });
   };
 
   const availableTypes: SocialMediaHandleTypesType[] = [
@@ -204,7 +216,7 @@ const SocialMediaHandleItem: FC<{
     isError,
   } = useAjaxRequest({
     instance: orphanageBackendInstance,
-    config: { url: "/v1/edit/social_media_handle", method: "DELETE" },
+    config: { url: "/v1/edit/social_media_handles", method: "DELETE" },
   });
 
   const deleteSocialMediaHandle = async () => {
@@ -291,6 +303,7 @@ const EditSocialMediaHandle: FC<{
     }>
   >;
 }> = ({ displayEditComponent, socialMediaHandle }) => {
+  const dispatch = useDispatch();
   const {
     value: link,
     isValid: linkIsValid,
@@ -316,11 +329,11 @@ const EditSocialMediaHandle: FC<{
     instance: orphanageBackendInstance,
     config: {
       method: "PATCH",
-      url: "/v1/edit/social_media_handle",
+      url: "/v1/edit/social_media_handles",
       data: [
         {
           type: socialMediaHandle.type,
-          link: socialMediaHandle.link,
+          link: link,
         },
       ],
     },
@@ -334,9 +347,16 @@ const EditSocialMediaHandle: FC<{
     if (!linkIsValid) return onLinkBlur();
 
     if (!loading)
-      await updateHandle((res) =>
-        displayEditComponent({ socialMediaHandle: undefined, display: false })
-      );
+      await updateHandle((res) => {
+        link &&
+          dispatch(
+            orphanageDetailsActions.editSocialMediaHandle({
+              type: socialMediaHandle.type,
+              link: link,
+            })
+          );
+        displayEditComponent({ socialMediaHandle: undefined, display: false });
+      });
   };
 
   useEffect(() => {
@@ -422,20 +442,32 @@ const SocialMediaHandlesSection: FC<{
     socialMediaHandle: SocialMediaHandleClass | undefined;
     display: boolean;
   }>({ socialMediaHandle: undefined, display: false });
+
+  const social_media_handles = useSelector<
+    SelectorType,
+    SocialMediaHandleClass[]
+  >((state) => state.orphanageDetails.details.social_media_handles);
+
   return (
     <>
       <h5>SOCIAL MEDIA HANDLES</h5>
-      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-        {socialMediaHandles.map((handle, i) => (
-          <>
-            <SocialMediaHandleItem
-              socialMediaHandle={handle}
-              displayEditComponent={setDisplayEditSection}
-              key={i}
-            />
-          </>
-        ))}
-      </List>
+      {socialMediaHandles.length > 0 ? (
+        <List
+          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+        >
+          {social_media_handles.map((handle, i) => (
+            <>
+              <SocialMediaHandleItem
+                socialMediaHandle={handle}
+                displayEditComponent={setDisplayEditSection}
+                key={i}
+              />
+            </>
+          ))}
+        </List>
+      ) : (
+        <div className={css.placeholder}>Add a social media profile...</div>
+      )}
       <AddNewSocialMediaHandle />
       {displayEditSection.display && displayEditSection.socialMediaHandle && (
         <EditSocialMediaHandle
@@ -449,7 +481,7 @@ const SocialMediaHandlesSection: FC<{
 
 const EditOrphanageAccountDetails: FC<{
   existingDetails: {
-    name: string | undefined;
+    fullname: string | undefined;
     phone_number: string | undefined;
     tagline: string | undefined;
     website: string | undefined;
@@ -535,9 +567,9 @@ const EditOrphanageAccountDetails: FC<{
     instance: orphanageBackendInstance,
     config: {
       url: "/v1/edit/details",
-      method: "PUT",
+      method: "PATCH",
       data: {
-        name: name,
+        fullname: name,
         tagline: tagline,
         phone_number: phoneNumber,
         website: website,
@@ -549,15 +581,28 @@ const EditOrphanageAccountDetails: FC<{
     if (!formIsValid) return executeBlurHandlers();
 
     // call API endpoint
-    if (!loading) await updateDetails((res) => closeModal());
+    if (!loading)
+      await updateDetails((res) => {
+        name && dispatch(orphanageDetailsActions.editName(name));
+        tagline && dispatch(orphanageDetailsActions.editTagline(tagline));
+        phoneNumber &&
+          dispatch(orphanageDetailsActions.editPhoneNumber(phoneNumber));
+        website && dispatch(orphanageDetailsActions.editWebsite(website));
+
+        closeModal();
+      });
   };
 
   useEffect(() => {
-    onNameChange(existingDetails.name);
-    onTaglineChange(existingDetails.tagline);
-    onPhoneNumberChange(existingDetails.phone_number);
-    onWebsiteChange(existingDetails.website);
-    setSocialMediaHandles([...existingDetails.social_media_handles]);
+    onNameChange(existingDetails?.fullname);
+    onTaglineChange(existingDetails?.tagline);
+    onPhoneNumberChange(existingDetails?.phone_number);
+    onWebsiteChange(existingDetails?.website);
+    setSocialMediaHandles([
+      ...(existingDetails?.social_media_handles
+        ? existingDetails.social_media_handles
+        : []),
+    ]);
   }, [existingDetails]);
 
   return (

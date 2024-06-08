@@ -17,21 +17,48 @@ export type ModalReducerType = {
 
 export type SelectorType = {
   modal: ModalReducerType;
+  orphanageDetails: OrphanageDetailsReducerType;
 };
 
 export type DescriptionType = { raw: string; text: string };
 
-export type UserDetailsType = {
-  name: string;
-  tagline: string;
-  phone_number: string;
-  website: string;
-  image: string;
+export type OrphanageDetailsType = {
+  fullname: string | undefined;
+  tagline: string | undefined;
+  phone_number: string | undefined;
+  website: string | undefined;
+  image: string | undefined;
+  location: OrphanageLocationType | undefined;
   metadata: {
-    background_cover_image: string;
-    about: {
-      text: { blocks: any[]; [x: string]: any };
-    };
+    cover_image: string | undefined;
   };
+  about:
+    | {
+        text: string;
+        raw: string;
+      }
+    | undefined;
   social_media_handles: SocialMediaHandleClass[];
+};
+
+export type OrphanageDetailsReducerType = {
+  details: OrphanageDetailsType;
+  metadata: {
+    fetching: boolean | undefined;
+    errorFetching:
+      | {
+          state: boolean;
+          error: { status: number; message: string } | undefined;
+        }
+      | undefined;
+    isUser: boolean | undefined;
+  };
+};
+
+export type OrphanageLocationType = {
+  lat: number;
+  lng: number;
+  metadata: {
+    address: string;
+  };
 };
