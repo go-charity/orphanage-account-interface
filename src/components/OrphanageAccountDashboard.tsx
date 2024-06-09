@@ -25,6 +25,7 @@ import { fetchOrphanageDetailsAction } from "@/store/orphanageReducer";
 import UserAccountError from "./UserAccountError";
 import UserAccount404 from "./UserAccount404";
 import { useInView } from "react-intersection-observer";
+import Loader from "./Loader";
 
 export const position = { lat: 6.5765376, lng: 3.3521664 };
 
@@ -285,7 +286,11 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
     orphanageDetails.metadata.fetching === true ||
     orphanageDetails.metadata.fetching === undefined
   ) {
-    return <>Loading...</>;
+    return (
+      <>
+        <Loader />
+      </>
+    );
   }
 
   if (orphanageDetails.metadata.errorFetching?.state === true) {

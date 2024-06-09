@@ -4,12 +4,13 @@
     @include flex(center, start, 10px, column);
     img {
         width: 400px;
-        height: 400px;
-        object-fit: contain;
+        height: auto;
+        object-fit: cover;
+        margin-top: 4rem;
     }
     .content {
         font-weight: 400;
-        font-size: 30px;
+        font-size: 20px;
     }
 
     @include media(max, 450px) {

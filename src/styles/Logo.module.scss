@@ -1,0 +1,31 @@
+@import "./config";
+
+.logo_container {
+    @include flex(center, center, 0.5rem);
+    .logo {
+        width: 50px;
+    }
+    .name {
+        @include flex(baseline, center, 0.1rem);
+        span {
+            font-size: 18px;
+            &:first-of-type {
+                font-weight: bold;
+                color: $pink-900;
+                font-size: 20px;
+            }
+            &:last-of-type {
+                color: $pink-300;
+                font-weight: bold;
+            }
+        }
+    }
+
+    @include media(max, 600px) {
+        .logo_container {
+            .name {
+                display: none;
+            }
+        }
+    }
+}
