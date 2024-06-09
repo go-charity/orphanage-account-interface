@@ -11,7 +11,7 @@ const Loader = () => {
         height: "100vh",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "start",
         background: "#fff1f3",
         flexDirection: "column",
         position: "fixed",
@@ -21,7 +21,7 @@ const Loader = () => {
         gap: "2rem",
       }}
     >
-      <div style={{ transform: "scale(1.5)" }}>
+      <div style={{ transform: "scale(1.5)", marginTop: "10rem" }}>
         <Logo />
       </div>
       <Box sx={{ width: "300px" }} color={"#8a113c"}>
