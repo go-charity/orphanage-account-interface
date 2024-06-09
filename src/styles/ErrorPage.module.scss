@@ -15,8 +15,8 @@
 
     @include media(max, 450px) {
         img {
-            width: 90vw;
-            height: 90vw;
+            width: 70vw;
+            height: auto;
         }
         .content {
             font-size: 20px;
