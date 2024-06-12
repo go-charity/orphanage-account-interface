@@ -34,12 +34,14 @@
     "sass": "^1.67.0",
     "typescript": "5.2.2",
     "use-ajax-request": "^2.1.0",
-    "use-manage-form": "^2.1.1"
+    "use-manage-form": "^2.1.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/draftjs-to-html": "^0.8.1",
     "@types/html-to-draftjs": "^1.4.1",
     "@types/react-draft-wysiwyg": "^1.13.4",
+    "@types/uuid": "^9.0.8",
     "draftjs-to-html": "^0.9.1"
   }
 }

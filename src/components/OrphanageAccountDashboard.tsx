@@ -3,7 +3,7 @@ import React, { FC, useState, useEffect } from "react";
 import css from "@/styles/OrphanageAccountDashboard.module.scss";
 import dummyProfilePic from "@/assets/images/dummy-profile-pic.jpg";
 import bgImage from "@/assets/images/bg-image.jpg";
-import EditIcon from "./EditIcon";
+import { EditIcon, AddIcon } from "./CustomIcons";
 import { Button, Divider, Fab } from "@mui/material";
 import { SocialMediaHandleClass } from "@/utils/utils";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +26,7 @@ import UserAccountError from "./UserAccountError";
 import UserAccount404 from "./UserAccount404";
 import { useInView } from "react-intersection-observer";
 import Loader from "./Loader";
+import AddOrphanageProject from "./AddOrphanageProject";
 
 export const position = { lat: 6.5765376, lng: 3.3521664 };
 
@@ -58,7 +59,7 @@ const Utilities = React.forwardRef<any, { format?: "vertical" | "horizontal" }>(
     ) as OrphanageDetailsType;
     return (
       <div className={`${css.utilities} ${css[format || ""]}`} ref={ref}>
-        <a href="mailto://onukwilip@gmail.com" title="mail">
+        <a href={`mailto://${orphanageDetails.email}`} title="mail">
           <Fab
             color="primary"
             size="small"
@@ -250,6 +251,18 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
       })
     );
   };
+  const addProject = () => {
+    dispatch(
+      modalActions.show({
+        children: <AddOrphanageProject />,
+        props: {
+          maxWidth: !isMobile ? "sm" : "lg",
+          open: true,
+          fullWidth: true,
+        },
+      })
+    );
+  };
   const editLocation = () => {
     dispatch(
       modalActions.show({
@@ -321,6 +334,7 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
 
   return (
     <section className={css.orphanage_account_dashboard}>
+      {/* // * SIDE MENU */}
       <div className={css.side_menu}>
         <Fab
           color="primary"
@@ -348,13 +362,16 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
           </>
         )}
       </div>
+      {/* // * MAIN SECTION */}
       <div className={css.sections_container}>
+        {/* // * ANALYTICS SECTION */}
         <div className={css.analytics_section}>
           <span>Analytics and overview</span>
           <span>
             Profile view in the last 7 days <b>1,000</b>
           </span>
         </div>
+        {/* // * PROFILE SECTION */}
         <div className={css.profile_section}>
           <div className={css.img_section}>
             <div className={css.bg_img_container}>
@@ -428,6 +445,7 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
             </div>
           </div>
         </div>
+        {/* // * ABOUT SECTION */}
         <div className={css.about_section} id="about">
           {orphanageDetails.metadata.isUser && (
             <EditIcon className={css.edit} background onClick={editAbout} />
@@ -445,6 +463,7 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
             </div>
           )}
         </div>
+        {/* // * LOCATION SECTION */}
         <div className={css.location_section}>
           {orphanageDetails.metadata.isUser && (
             <EditIcon className={css.edit} background onClick={editLocation} />
@@ -481,6 +500,22 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
                 ></iframe>
               )}
           </div>
+        </div>
+        {/* // * PROJECTS SECTION */}
+        <div className={css.projects_section} id="projects">
+          {orphanageDetails.metadata.isUser && (
+            <AddIcon className={css.add} background onClick={addProject} />
+          )}
+          <span>Projects</span>
+          {orphanageDetails?.details?.projects ? (
+            "Projects"
+          ) : (
+            <div className={css.placeholder}>
+              {orphanageDetails.metadata.isUser
+                ? "Add project initiatives here..."
+                : "No project added"}
+            </div>
+          )}
         </div>
       </div>
     </section>

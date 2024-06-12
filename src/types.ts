@@ -29,6 +29,7 @@ export type OrphanageDetailsType = {
   website: string | undefined;
   image: string | undefined;
   location: OrphanageLocationType | undefined;
+  email: string;
   metadata: {
     cover_image: string | undefined;
   };
@@ -39,6 +40,7 @@ export type OrphanageDetailsType = {
       }
     | undefined;
   social_media_handles: SocialMediaHandleClass[];
+  projects: Record<string, string>[];
 };
 
 export type OrphanageDetailsReducerType = {
@@ -62,3 +64,5 @@ export type OrphanageLocationType = {
     address: string;
   };
 };
+
+export type OrphanageProjectImageType = { id: string; file: File };

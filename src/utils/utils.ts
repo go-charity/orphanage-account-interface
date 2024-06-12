@@ -4,6 +4,14 @@ export class SocialMediaHandleClass {
   constructor(public type: SocialMediaHandleTypesType, public link: string) {}
 }
 
+export class ProjectImage {
+  constructor(public id: string, public file: File) {}
+}
+
+export class EditorContentType {
+  constructor(public raw: string, public text: string) {}
+}
+
 /**
  * Converts a utf-8 string to a base64 string
  * @param value utf-8 string

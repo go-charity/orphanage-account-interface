@@ -56,3 +56,18 @@ $pry-colors: (
         @content;
     }
 }
+
+@mixin h-scroll {
+    &::-webkit-scrollbar {
+        height: 5px;
+        border-radius: 2px;
+    }
+    &::-webkit-scrollbar-track {
+        background: lightgray;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $pink-500;
+        width: 20px;
+        border-radius: 2px;
+    }
+}

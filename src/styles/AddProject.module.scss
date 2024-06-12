@@ -1,0 +1,55 @@
+@import "./config.scss";
+
+.add_orphanage_project {
+    @include flex(start, start, 1rem, column);
+    & > * {
+        width: 100%;
+    }
+
+    .input {
+        min-width: 100%;
+    }
+}
+.upload_image {
+    @include flex(start, start, 0.5rem, column);
+    .uploaded_images {
+        @include flex(start, start, 0.3rem);
+        max-width: 100%;
+        overflow-x: auto;
+        .img_container {
+            position: relative;
+            .delete {
+                position: absolute;
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+            img {
+                width: 150px;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 7px;
+            }
+        }
+        @include h-scroll();
+    }
+    .upload_button {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 7px;
+        @include flex(center, center, 0.3rem, column);
+        background-color: $pink-50;
+        cursor: pointer;
+        transition: 200ms;
+        i {
+            color: $pink-500;
+        }
+        &:hover {
+            background-color: $pink-100;
+        }
+    }
+}
+.editor {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    height: 300px;
+}
