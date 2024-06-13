@@ -173,20 +173,16 @@ const ProjectDescription: FC<{
   updateDescription: React.Dispatch<React.SetStateAction<DescriptionType>>;
 }> = ({ existingDescription, updateDescription }) => {
   const [description, setDescription] = useState<any>(undefined);
-  //   const [descriptionText, setDescriptionText] = useState("");
 
   const onDescriptionChange = (editorState: EditorStateType) => {
     setDescription(editorState);
     const raw = convertToRaw(editorState.getCurrentContent());
     const text = raw.blocks.map((obj) => obj.text).join("");
 
-    // setDescriptionText(text);
-
     const modifiedDescription = new EditorContentType(
       JSON.stringify(raw),
       text
     );
-
     updateDescription(modifiedDescription);
   };
 
@@ -196,9 +192,6 @@ const ProjectDescription: FC<{
         const contentDraft = JSON.parse(existingDescription.raw);
         const contentState = convertFromRaw(contentDraft);
         setDescription(EditorState.createWithContent(contentState));
-        // setDescriptionText(
-        //   contentDraft?.blocks?.map((obj: any) => obj?.text)?.join("")
-        // );
       } catch (error: any) {
         const html = `<p>${existingDescription.text}</p>`;
         const contentBlock = htmlToDraft(html);
@@ -207,14 +200,12 @@ const ProjectDescription: FC<{
             contentBlock.contentBlocks
           );
           setDescription(EditorState.createWithContent(contentState));
-          //   setDescriptionText(existingDescription.text);
         }
       }
     } else {
       setDescription(EditorState.createEmpty());
-      //   setDescriptionText("");
     }
-  }, [existingDescription]);
+  }, []);
 
   return (
     <>
@@ -224,7 +215,7 @@ const ProjectDescription: FC<{
         wrapperClassName="demo-wrapper"
         editorClassName={css.editor}
         onEditorStateChange={onDescriptionChange}
-        placeholder="Enter project details..."
+        placeholder="Describe your project here..."
       />
     </>
   );
@@ -241,6 +232,16 @@ const AddOrphanageProject = () => {
     reset: resetProjectName,
   } = useInput<string>((value) =>
     value ? true : false && value?.trim() !== ""
+  );
+  const {
+    value: projectGoal,
+    isValid: projectGoalIsValid,
+    inputIsInValid: projectGoalInputIsInvalid,
+    onBlur: onProjectGoalBlur,
+    onChange: onProjectGoalChange,
+    reset: resetProjectGoal,
+  } = useInput<string>((value) =>
+    value ? true : false && !isNaN(Number(value))
   );
   const [images, setImages] = useState<OrphanageProjectImageType[]>([]);
   const [projectDescription, setProjectDescription] = useState<DescriptionType>(
@@ -283,7 +284,7 @@ const AddOrphanageProject = () => {
           placeholder="Enter the name of the project..."
           variant="filled"
           className={css.input}
-          value={name}
+          value={projectName}
           onChange={(e) => onProjectNameChange(e.target.value)}
           onBlur={onProjectNameBlur as any}
           error={projectNameInputIsInvalid}
@@ -292,6 +293,18 @@ const AddOrphanageProject = () => {
         <ProjectDescription
           existingDescription={projectDescription}
           updateDescription={setProjectDescription}
+        />
+        <TextField
+          label="Project goal"
+          placeholder="Enter how much you hope to raise for this project..."
+          variant="filled"
+          className={css.input}
+          value={projectGoal}
+          type="number"
+          onChange={(e) => onProjectGoalChange(e.target.value)}
+          onBlur={onProjectGoalBlur as any}
+          error={projectGoalInputIsInvalid}
+          helperText={projectGoalInputIsInvalid && "Input must be a number"}
         />
       </DialogContent>
       <DialogActions className={css.edit_details_actions}>
