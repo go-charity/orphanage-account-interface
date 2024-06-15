@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogTitle,
   Fab,
+  FormHelperText,
   IconButton,
   Snackbar,
   TextField,
@@ -13,7 +14,7 @@ import React, { FC, useEffect, useState } from "react";
 import css from "@/styles/AddProject.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "@/store/store";
-import { useInput } from "use-manage-form";
+import { useForm, useInput } from "use-manage-form";
 import {
   DescriptionType,
   ModalReducerType,
@@ -65,6 +66,7 @@ const UploadImagesComponent: FC<{
     React.SetStateAction<OrphanageProjectImageType[]>
   >;
   uploadedImages: OrphanageProjectImageType[];
+  error?: boolean;
 }> = ({ uploadedImages, updateImages }) => {
   const [fileUploadError, setFileUploadError] = useState<{
     display: boolean;
@@ -127,7 +129,7 @@ const UploadImagesComponent: FC<{
 
   return (
     <>
-      <div className={css.upload_image}>
+      <div className={`${css.upload_image} ${css.error}`}>
         <div className={css.uploaded_images}>
           {uploadedImages.map((image) => (
             <EachImage
@@ -150,6 +152,9 @@ const UploadImagesComponent: FC<{
             />
           </label>
         )}
+        <span className={css.error_msg}>
+          {"At least 1 image must be uploaded"}
+        </span>
       </div>
       {fileUploadError.display && (
         <>
@@ -170,8 +175,19 @@ const UploadImagesComponent: FC<{
 
 const ProjectDescription: FC<{
   existingDescription: DescriptionType | undefined;
-  updateDescription: React.Dispatch<React.SetStateAction<DescriptionType>>;
-}> = ({ existingDescription, updateDescription }) => {
+  updateDescription: Function;
+  error?: boolean;
+  descriptionIsValid: boolean;
+  onDescriptionBlur: Function;
+  toogleClearEditor: boolean;
+}> = ({
+  existingDescription,
+  updateDescription,
+  error,
+  descriptionIsValid,
+  onDescriptionBlur,
+  toogleClearEditor,
+}) => {
   const [description, setDescription] = useState<any>(undefined);
 
   const onDescriptionChange = (editorState: EditorStateType) => {
@@ -207,21 +223,44 @@ const ProjectDescription: FC<{
     }
   }, []);
 
+  useEffect(() => {
+    setDescription(EditorState.createEmpty());
+  }, [toogleClearEditor]);
+
   return (
-    <>
+    <div className={`${css.editor_wrapper} ${error ? css.error : ""}`}>
       <Editor
         editorState={description}
         toolbarClassName="toolbarClassName"
         wrapperClassName="demo-wrapper"
         editorClassName={css.editor}
         onEditorStateChange={onDescriptionChange}
+        onBlur={onDescriptionBlur as any}
         placeholder="Describe your project here..."
       />
-    </>
+      <div className={css.sub_content}>
+        {error && (
+          <span className={css.error_msg}>
+            Input must be greater than 50 words
+          </span>
+        )}
+        <span className={css.word_count}>
+          <span className={`${descriptionIsValid ? css.more : css.less}`}>
+            {
+              existingDescription?.text
+                ?.trim()
+                ?.split(" ")
+                ?.filter((word) => word !== "")?.length
+            }
+            /50
+          </span>
+        </span>
+      </div>
+    </div>
   );
 };
 
-const AddOrphanageProject = () => {
+const AddEditOrphanageProject = () => {
   const dispatch = useDispatch();
   const {
     value: projectName,
@@ -244,17 +283,59 @@ const AddOrphanageProject = () => {
     value ? true : false && !isNaN(Number(value))
   );
   const [images, setImages] = useState<OrphanageProjectImageType[]>([]);
-  const [projectDescription, setProjectDescription] = useState<DescriptionType>(
-    new EditorContentType("", "")
-  );
-  const descriptionDetailsIsValid =
-    projectDescription.text
-      ?.trim()
-      ?.split(" ")
-      ?.filter((word) => word !== "")?.length >= 50;
+  const [imagesIsValid, setImagesIsValid] = useState(images.length > 0);
+  const {
+    value: projectDescription,
+    isValid: projectDescriptionIsValid,
+    inputIsInValid: projectDescriptionInputIsInvalid,
+    onBlur: onProjectDescriptionBlur,
+    onChange: onProjectDescriptionChange,
+    reset: resetProjectDescription,
+  } = useInput<DescriptionType>({
+    validateFunction: (value) =>
+      value
+        ? value?.text
+            ?.trim()
+            ?.split(" ")
+            ?.filter((word) => word !== "")?.length >= 50
+        : false,
+    defaultValue: new EditorContentType("", ""),
+  });
+  const [
+    clearDescriptionEditorStateToogle,
+    setClearDescriptionEditorStateToogle,
+  ] = useState(false);
 
   const closeModal = () => {
     dispatch(modalActions.hide());
+  };
+
+  const { executeBlurHandlers, formIsValid, reset } = useForm({
+    blurHandlers: [
+      onProjectNameBlur,
+      onProjectGoalBlur,
+      onProjectDescriptionBlur,
+    ],
+    resetHandlers: [
+      resetProjectName,
+      resetProjectGoal,
+      resetProjectDescription,
+      () => setClearDescriptionEditorStateToogle((prev) => !prev),
+      () => setImages([]),
+    ],
+    validateOptions: () =>
+      projectNameIsValid &&
+      projectGoalIsValid &&
+      projectDescriptionIsValid &&
+      imagesIsValid,
+  });
+
+  const submitHandler = () => {
+    console.log("FORM IS VALID", formIsValid);
+    console.log("description text", projectDescription?.text);
+    if (!formIsValid) return executeBlurHandlers();
+
+    reset();
   };
 
   return (
@@ -278,6 +359,7 @@ const AddOrphanageProject = () => {
         <UploadImagesComponent
           uploadedImages={images}
           updateImages={setImages}
+          error={!imagesIsValid}
         />
         <TextField
           label="Name"
@@ -285,6 +367,7 @@ const AddOrphanageProject = () => {
           variant="filled"
           className={css.input}
           value={projectName}
+          name="name"
           onChange={(e) => onProjectNameChange(e.target.value)}
           onBlur={onProjectNameBlur as any}
           error={projectNameInputIsInvalid}
@@ -292,7 +375,11 @@ const AddOrphanageProject = () => {
         />
         <ProjectDescription
           existingDescription={projectDescription}
-          updateDescription={setProjectDescription}
+          updateDescription={onProjectDescriptionChange}
+          descriptionIsValid={projectDescriptionIsValid}
+          onDescriptionBlur={onProjectDescriptionBlur}
+          toogleClearEditor={clearDescriptionEditorStateToogle}
+          error={projectDescriptionInputIsInvalid}
         />
         <TextField
           label="Project goal"
@@ -301,6 +388,7 @@ const AddOrphanageProject = () => {
           className={css.input}
           value={projectGoal}
           type="number"
+          name="amount"
           onChange={(e) => onProjectGoalChange(e.target.value)}
           onBlur={onProjectGoalBlur as any}
           error={projectGoalInputIsInvalid}
@@ -311,12 +399,14 @@ const AddOrphanageProject = () => {
         <Button onClick={closeModal} color="error">
           Cancel
         </Button>
-        <Button onClick={() => {}} color="success" disabled={false}>
-          {false ? "Saving..." : "Save changes"}
+        <Button onClick={submitHandler} color="success" disabled={false}>
+          {false ? "Adding..." : "Add project"}
         </Button>
       </DialogActions>
     </>
   );
 };
 
-export default AddOrphanageProject;
+export default AddEditOrphanageProject;
+
+// Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, ab saepe, incidunt vitae molestiae quam, impedit quas odio eum aut blanditiis quaerat reiciendis dolores voluptate illo sit. Architecto sed, labore molestias commodi odit consequatur accusantium veritatis debitis laudantium earum laborum neque sapiente pariatur beatae illo ipsum distinctio dolore velit libero dicta? Ut doloremque incidunt ipsa ad possimus eum delectus ullam?

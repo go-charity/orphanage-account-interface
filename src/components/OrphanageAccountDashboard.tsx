@@ -26,7 +26,7 @@ import UserAccountError from "./UserAccountError";
 import UserAccount404 from "./UserAccount404";
 import { useInView } from "react-intersection-observer";
 import Loader from "./Loader";
-import AddOrphanageProject from "./AddOrphanageProject";
+import AddEditOrphanageProject from "./AddOrphanageProject";
 
 export const position = { lat: 6.5765376, lng: 3.3521664 };
 
@@ -254,7 +254,7 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
   const addProject = () => {
     dispatch(
       modalActions.show({
-        children: <AddOrphanageProject />,
+        children: <AddEditOrphanageProject />,
         props: {
           maxWidth: !isMobile ? "sm" : "lg",
           open: true,
@@ -507,7 +507,7 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
             <AddIcon className={css.add} background onClick={addProject} />
           )}
           <span>Projects</span>
-          {orphanageDetails?.details?.projects ? (
+          {orphanageDetails?.details?.projects?.length > 0 ? (
             "Projects"
           ) : (
             <div className={css.placeholder}>

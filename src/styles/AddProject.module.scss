@@ -47,9 +47,26 @@
             background-color: $pink-100;
         }
     }
+    &.error {
+        @include error_msg();
+    }
 }
-.editor {
-    border: 1px solid lightgray;
-    border-radius: 5px;
-    height: 300px;
+
+.editor_wrapper {
+    .editor {
+        border: 1px solid lightgray;
+        border-radius: 5px;
+        height: 300px;
+        padding: 0 1rem;
+    }
+    &.error {
+        .editor {
+            border-bottom: 1px solid #d32f2f;
+        }
+        @include error_msg();
+    }
+    .sub_content {
+        @include flex(center, space-between, 0);
+        @include word_count();
+    }
 }

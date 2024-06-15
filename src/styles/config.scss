@@ -71,3 +71,27 @@ $pry-colors: (
         border-radius: 2px;
     }
 }
+
+@mixin word_count {
+    .word_count {
+        text-align: right;
+        width: 100%;
+        .less {
+            color: orangered;
+        }
+        .more {
+            color: green;
+        }
+    }
+}
+
+@mixin error_msg {
+    .error_msg {
+        color: #d32f2f;
+        font-size: 0.75rem;
+        margin-left: 14px;
+        font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+        font-weight: 400;
+        width: 100%;
+    }
+}

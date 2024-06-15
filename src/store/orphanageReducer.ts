@@ -1,4 +1,5 @@
 import {
+  AddOrphanageProjectType,
   OrphanageDetailsReducerType,
   OrphanageDetailsType,
   OrphanageLocationType,
@@ -119,6 +120,9 @@ const orphanageDetailsSlice = createSlice({
       }
     ) => {
       state.metadata.errorFetching = payload;
+    },
+    addProject: (state, { payload }: { payload: AddOrphanageProjectType }) => {
+      state.details.projects.push(payload);
     },
   },
 });

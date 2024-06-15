@@ -40,7 +40,7 @@ export type OrphanageDetailsType = {
       }
     | undefined;
   social_media_handles: SocialMediaHandleClass[];
-  projects: Record<string, string>[];
+  projects: OrphanageProjectType[];
 };
 
 export type OrphanageDetailsReducerType = {
@@ -63,6 +63,17 @@ export type OrphanageLocationType = {
   metadata: {
     address: string;
   };
+};
+
+export type AddOrphanageProjectType = {
+  images: string[];
+  name: string;
+  description: string;
+  goal: number;
+};
+
+export type OrphanageProjectType = AddOrphanageProjectType & {
+  donations?: Record<string, string>[];
 };
 
 export type OrphanageProjectImageType = { id: string; file: File };
