@@ -1,6 +1,6 @@
 import { DialogProps } from "@mui/material";
 import React from "react";
-import { SocialMediaHandleClass } from "./utils/utils";
+import { EditorContentClass, SocialMediaHandleClass } from "./utils/utils";
 
 export type SocialMediaHandleTypesType =
   | "twitter"
@@ -68,7 +68,7 @@ export type OrphanageLocationType = {
 export type AddOrphanageProjectType = {
   images: string[];
   name: string;
-  description: string;
+  description: EditorContentClass;
   goal: number;
 };
 

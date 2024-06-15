@@ -13,7 +13,7 @@ import {
 import React, { FC, useEffect, useState } from "react";
 import css from "@/styles/AddProject.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { modalActions } from "@/store/store";
+import { modalActions, orphanageDetailsActions } from "@/store/store";
 import { useForm, useInput } from "use-manage-form";
 import {
   DescriptionType,
@@ -21,7 +21,11 @@ import {
   OrphanageProjectImageType,
   SelectorType,
 } from "@/types";
-import { EditorContentType, ProjectImage } from "@/utils/utils";
+import {
+  EditorContentClass,
+  OrphanageProjectClass,
+  ProjectImage,
+} from "@/utils/utils";
 import { v4 as uuidV4 } from "uuid";
 import { Editor, EditorState as EditorStateType } from "react-draft-wysiwyg";
 import {
@@ -67,7 +71,7 @@ const UploadImagesComponent: FC<{
   >;
   uploadedImages: OrphanageProjectImageType[];
   error?: boolean;
-}> = ({ uploadedImages, updateImages }) => {
+}> = ({ uploadedImages, updateImages, error }) => {
   const [fileUploadError, setFileUploadError] = useState<{
     display: boolean;
     message: string | undefined;
@@ -152,9 +156,11 @@ const UploadImagesComponent: FC<{
             />
           </label>
         )}
-        <span className={css.error_msg}>
-          {"At least 1 image must be uploaded"}
-        </span>
+        {error && (
+          <span className={css.error_msg}>
+            At least 1 image must be uploaded
+          </span>
+        )}
       </div>
       {fileUploadError.display && (
         <>
@@ -195,7 +201,7 @@ const ProjectDescription: FC<{
     const raw = convertToRaw(editorState.getCurrentContent());
     const text = raw.blocks.map((obj) => obj.text).join("");
 
-    const modifiedDescription = new EditorContentType(
+    const modifiedDescription = new EditorContentClass(
       JSON.stringify(raw),
       text
     );
@@ -299,7 +305,7 @@ const AddEditOrphanageProject = () => {
             ?.split(" ")
             ?.filter((word) => word !== "")?.length >= 50
         : false,
-    defaultValue: new EditorContentType("", ""),
+    defaultValue: new EditorContentClass("", ""),
   });
   const [
     clearDescriptionEditorStateToogle,
@@ -324,10 +330,7 @@ const AddEditOrphanageProject = () => {
       () => setImages([]),
     ],
     validateOptions: () =>
-      projectNameIsValid &&
-      projectGoalIsValid &&
-      projectDescriptionIsValid &&
-      imagesIsValid,
+      projectNameIsValid && projectGoalIsValid && projectDescriptionIsValid,
   });
 
   const submitHandler = () => {
@@ -335,7 +338,25 @@ const AddEditOrphanageProject = () => {
     console.log("description text", projectDescription?.text);
     if (!formIsValid) return executeBlurHandlers();
 
+    // TODO: SEND A POST REQUEST TO API ENDPOINT
+
+    // * UPDATE ORPHANAGE DETAILS STORE
+    dispatch(
+      orphanageDetailsActions.addProject(
+        new OrphanageProjectClass(
+          images.map((eachImage) => URL.createObjectURL(eachImage.file)),
+          projectName || "",
+          projectDescription || new EditorContentClass("", ""),
+          Number(projectGoal) || 0
+        )
+      )
+    );
+
+    // * RESET THE FORM
     reset();
+
+    // * CLOSE THE MODAL
+    dispatch(modalActions.hide());
   };
 
   return (
@@ -359,7 +380,6 @@ const AddEditOrphanageProject = () => {
         <UploadImagesComponent
           uploadedImages={images}
           updateImages={setImages}
-          error={!imagesIsValid}
         />
         <TextField
           label="Name"

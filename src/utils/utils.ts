@@ -8,8 +8,17 @@ export class ProjectImage {
   constructor(public id: string, public file: File) {}
 }
 
-export class EditorContentType {
+export class EditorContentClass {
   constructor(public raw: string, public text: string) {}
+}
+
+export class OrphanageProjectClass {
+  constructor(
+    public images: string[],
+    public name: string,
+    public description: EditorContentClass,
+    public goal: number
+  ) {}
 }
 
 /**
