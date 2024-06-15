@@ -29,7 +29,7 @@ export type OrphanageDetailsType = {
   website: string | undefined;
   image: string | undefined;
   location: OrphanageLocationType | undefined;
-  email: string;
+  email: string | undefined;
   metadata: {
     cover_image: string | undefined;
   };

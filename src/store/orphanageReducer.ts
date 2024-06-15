@@ -19,6 +19,8 @@ const initialState: OrphanageDetailsReducerType = {
     tagline: undefined,
     website: undefined,
     location: undefined,
+    email: undefined,
+    projects: [],
   },
   metadata: {
     fetching: undefined,
