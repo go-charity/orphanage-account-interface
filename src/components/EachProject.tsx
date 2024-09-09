@@ -7,6 +7,7 @@ import Collapsible from "./Collapsibe";
 import { Button, LinearProgress, linearProgressClasses } from "@mui/material";
 import { EditIcon } from "./CustomIcons";
 import Donate from "./Donate";
+import DonateButton from "./Donate";
 
 const EachProject: FC<{ project: OrphanageProjectType; is_user: boolean }> = ({
   project,
@@ -48,7 +49,7 @@ const EachProject: FC<{ project: OrphanageProjectType; is_user: boolean }> = ({
               })}
             />
           </div>
-          {!is_user && <Donate />}
+          {!is_user && <DonateButton />}
         </div>
       </div>
     </div>

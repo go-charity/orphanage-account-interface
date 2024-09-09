@@ -154,21 +154,6 @@
                 .utilities_container {
                     display: none;
                 }
-                .action {
-                    button {
-                        width: 170px;
-                        height: 40px;
-                        background: $pink-900;
-                        color: $pink-50;
-                        @include flex(center, start, 1rem);
-                        i {
-                            font-size: 20px;
-                        }
-                        span {
-                            font-size: 18px;
-                        }
-                    }
-                }
             }
             .right {
                 flex: 1;

@@ -29,6 +29,7 @@ import Loader from "./Loader";
 import AddEditOrphanageProject from "./AddOrphanageProject";
 import EachProject from "./EachProject";
 import Collapsible from "./Collapsibe";
+import DonateButton from "./Donate";
 
 export const position = { lat: 6.5765376, lng: 3.3521664 };
 
@@ -375,9 +376,7 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
               </div>
               {!orphanageDetails.metadata.isUser && (
                 <div className={css.action}>
-                  <Button variant="contained">
-                    <i className="fa-solid fa-hand-holding-dollar"></i> Donate
-                  </Button>
+                  <DonateButton />
                 </div>
               )}
             </div>

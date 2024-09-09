@@ -1,4 +1,6 @@
-.donate {
+@import "./config.scss";
+
+button.donate {
     width: 170px;
     height: 40px;
     background: $pink-900;
