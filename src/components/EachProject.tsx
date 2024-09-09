@@ -6,6 +6,7 @@ import { convert_textblock_to_html } from "@/utils/utils";
 import Collapsible from "./Collapsibe";
 import { Button, LinearProgress, linearProgressClasses } from "@mui/material";
 import { EditIcon } from "./CustomIcons";
+import Donate from "./Donate";
 
 const EachProject: FC<{ project: OrphanageProjectType; is_user: boolean }> = ({
   project,
@@ -47,11 +48,7 @@ const EachProject: FC<{ project: OrphanageProjectType; is_user: boolean }> = ({
               })}
             />
           </div>
-          {!is_user && (
-            <Button variant="contained" className={css.donate}>
-              <i className="fa-solid fa-hand-holding-dollar"></i> Donate
-            </Button>
-          )}
+          {!is_user && <Donate />}
         </div>
       </div>
     </div>

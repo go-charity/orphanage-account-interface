@@ -48,22 +48,7 @@
             & > div {
                 width: 100%;
             }
-            .donate {
-                width: 170px;
-                height: 40px;
-                background: $pink-900;
-                color: $pink-50;
-                @include flex(center, start, 1rem);
-                i {
-                    font-size: 20px;
-                }
-                span {
-                    font-size: 18px;
-                }
-                &:hover {
-                    background: $pink-700;
-                }
-            }
+
             .goal_container {
                 font-size: 18px;
                 color: lighten(black, 40%);
