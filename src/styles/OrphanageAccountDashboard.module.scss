@@ -4,7 +4,6 @@
     .orphanage_account_dashboard {
         width: 100%;
         padding: 2rem;
-        // @include flex(center, start, 1rem, column);
         @include flex(start, center, 1rem);
         &::before {
             content: "";
@@ -19,13 +18,6 @@
             left: 0;
             opacity: 0.5;
         }
-        // & > div {
-        //     max-width: 700px;
-        //     width: 100%;
-        //     background: white;
-        //     padding: 1.5rem;
-        //     border-radius: 10px;
-        // }
         @include media(max, 500px) {
             padding: 0.5rem;
         }
@@ -220,7 +212,7 @@
         }
     }
     .projects_section {
-        @include flex(start, center, 0.5rem, column);
+        @include flex(start, center, 2rem, column);
         position: relative;
         & > .add {
             top: 0.5rem;

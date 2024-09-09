@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "docker:start": "next build && next start -p 3000",
     "start": "next start",
     "lint": "next lint"
   },

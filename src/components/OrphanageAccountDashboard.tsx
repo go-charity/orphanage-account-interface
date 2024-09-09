@@ -4,29 +4,31 @@ import css from "@/styles/OrphanageAccountDashboard.module.scss";
 import dummyProfilePic from "@/assets/images/dummy-profile-pic.jpg";
 import bgImage from "@/assets/images/bg-image.jpg";
 import { EditIcon, AddIcon } from "./CustomIcons";
-import { Button, Divider, Fab } from "@mui/material";
-import { SocialMediaHandleClass } from "@/utils/utils";
+import { Button, Fab } from "@mui/material";
+import {
+  convert_textblock_to_html,
+  SocialMediaHandleClass,
+} from "@/utils/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "@/store/store";
 import EditBgImgCover from "./EditBgImgCover";
 import EditImage from "./EditImage";
 import EditOrphanageAccountDetails from "./EditOrphanageAccountDetails";
 import EditOrphanageAboutSection from "./EditOrphanageAboutSection";
-import draftToHtml from "draftjs-to-html";
 import {
-  DescriptionType,
   OrphanageDetailsReducerType,
   OrphanageDetailsType,
   SelectorType,
 } from "@/types";
 import EditOrphanageLocation from "./EditOrphanageLocation";
-import { useRouter } from "next/router";
 import { fetchOrphanageDetailsAction } from "@/store/orphanageReducer";
 import UserAccountError from "./UserAccountError";
 import UserAccount404 from "./UserAccount404";
 import { useInView } from "react-intersection-observer";
 import Loader from "./Loader";
 import AddEditOrphanageProject from "./AddOrphanageProject";
+import EachProject from "./EachProject";
+import Collapsible from "./Collapsibe";
 
 export const position = { lat: 6.5765376, lng: 3.3521664 };
 
@@ -126,53 +128,6 @@ const Utilities = React.forwardRef<any, { format?: "vertical" | "horizontal" }>(
 const about = {
   raw: `{"blocks":[{"key":"fj3pu","text":"Lorem ipsum dolor sit amet consectetur adipisicing elit. ","type":"header-one","depth":0,"inlineStyleRanges":[{"offset":0,"length":57,"style":"color-rgb(0,0,0)"},{"offset":0,"length":57,"style":"bgcolor-rgb(255,255,255)"},{"offset":0,"length":57,"style":"fontfamily-__Poppins_Fallback_9d9b8c, __Poppins_Fallback_Fallback_9d9b8c"},{"offset":0,"length":57,"style":"fontsize-24"}],"entityRanges":[],"data":{}},{"key":"8h1k1","text":"Nobis odit, deserunt numquam nihil quod, eos quis minus rem cum similique sequi, est quae dicta blanditiis praesentium veritatis. Doloribus rerum commodi quidem veniam similique? Corporis ratione quod sint quidem. Ut, earum nesciunt! Fuga rem cupiditate fugit, necessitatibus, architecto sapiente laborum nostrum dolor iste consectetur nihil minima impedit dolores est, dignissimos nobis aut eveniet libero praesentium? Accusantium reiciendis totam culpa dolorum obcaecati delectus iste eaque neque? In alias saepe, necessitatibus dicta cupiditate voluptatem rerum iusto a perferendis porro ipsam omnis voluptates consequatur tempora, error incidunt ad quidem eligendi temporibus aspernatur? Odit sapiente, culpa, eveniet commodi distinctio qui id quas similique minus iste aut, minima accusantium maxime! Illo repudiandae, blanditiis unde modi quod nam sit neque accusantium dolorum inventore amet nisi. Est repellat eveniet minima ullam! Illum nam aperiam ex explicabo alias temporibus laudantium, praesentium natus eius quisquam iure ullam reprehenderit molestias, veritatis rem? Nihil illo officiis deserunt eum atque minima exercitationem praesentium debitis dolor natus quisquam labore voluptate velit alias, ea quod ducimus voluptatibus voluptatum dolores ipsam cumque veniam accusantium. Ea, ipsam iusto? Doloribus fugit autem distinctio. Eveniet error autem natus odit illo maxime possimus, minus quasi iusto nemo, sit consequatur fuga soluta, odio saepe itaque deserunt. Ducimus tempore natus ratione consequuntur laborum libero quia hic repudiandae numquam nulla? Saepe quos est totam obcaecati perspiciatis expedita minima debitis, reprehenderit repudiandae, modi libero ipsa hic tempore numquam quisquam ad ipsam at deleniti, officia neque placeat quibusdam dolorem officiis! Aspernatur natus obcaecati voluptatum officiis accusamus optio, facere beatae alias, nobis voluptatem assumenda. Id reiciendis, amet saepe magni commodi deleniti omnis vero fugiat quos. Aut earum in consequatur vitae tempora sequi deleniti rem quo. Cumque ipsa nostrum dicta perferendis recusandae excepturi! Ut labore laborum asperiores reiciendis soluta, libero cupiditate. Earum, tempore rem. Odio, ipsum quas! Molestiae harum quae ex officiis distinctio hic dolor, accusamus possimus cupiditate veniam suscipit sapiente quas commodi voluptatem quidem voluptates ad quibusdam maxime perspiciatis. Ipsum eos vero commodi aperiam libero obcaecati iste, ullam nam perspiciatis optio hic, doloribus rem molestiae error quis eum veritatis nesciunt similique quod. Hic dignissimos praesentium a sunt totam magnam eum sed architecto pariatur excepturi unde deleniti sapiente enim eveniet est vitae quidem, perferendis quos perspiciatis vero consequuntur. Consectetur impedit recusandae officiis sint magnam illum! Quo repudiandae est facilis voluptate nesciunt natus odio sequi, accusantium labore cupiditate totam. Eaque alias amet exercitationem officiis ratione cupiditate officia quis, animi omnis veritatis facere recusandae perspiciatis aperiam perferendis quam rem dolorum explicabo asperiores nihil ea! Facilis fuga praesentium cum, exercitationem possimus, placeat excepturi ratione blanditiis distinctio aliquam accusamus modi, quod aut optio corporis nemo ipsum? Beatae, corporis reiciendis officia non possimus dignissimos repellendus! Consectetur ipsum ab soluta excepturi illo eaque commodi nemo totam inventore. Quo porro labore mollitia tempore incidunt neque debitis ad nemo id nisi minima voluptas consectetur, perferendis temporibus distinctio? Maiores consectetur nihil fuga magni consequuntur quidem deserunt porro saepe vero. Optio mollitia repudiandae voluptate quis voluptatem, inventore aut saepe expedita maxime aliquam voluptates laudantium vero quae odio? ","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":0,"length":3768,"style":"color-rgb(0,0,0)"},{"offset":0,"length":3768,"style":"bgcolor-rgb(255,255,255)"},{"offset":0,"length":3768,"style":"fontsize-14"},{"offset":0,"length":3768,"style":"fontfamily-__Poppins_Fallback_9d9b8c, __Poppins_Fallback_Fallback_9d9b8c"}],"entityRanges":[],"data":{}}],"entityMap":{}}`,
   text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis odit, deserunt numquam nihil quod, eos quis minus rem cum similique sequi, est quae dicta blanditiis praesentium veritatis. Doloribus rerum commodi quidem veniam similique? Corporis ratione quod sint quidem. Ut, earum nesciunt! Fuga rem cupiditate fugit, necessitatibus, architecto sapiente laborum nostrum dolor iste consectetur nihil minima impedit dolores est, dignissimos nobis aut eveniet libero praesentium? Accusantium reiciendis totam culpa dolorum obcaecati delectus iste eaque neque? In alias saepe, necessitatibus dicta cupiditate voluptatem rerum iusto a perferendis porro ipsam omnis voluptates consequatur tempora, error incidunt ad quidem eligendi temporibus aspernatur? Odit sapiente, culpa, eveniet commodi distinctio qui id quas similique minus iste aut, minima accusantium maxime! Illo repudiandae, blanditiis unde modi quod nam sit neque accusantium dolorum inventore amet nisi. Est repellat eveniet minima ullam! Illum nam aperiam ex explicabo alias temporibus laudantium, praesentium natus eius quisquam iure ullam reprehenderit molestias, veritatis rem? Nihil illo officiis deserunt eum atque minima exercitationem praesentium debitis dolor natus quisquam labore voluptate velit alias, ea quod ducimus voluptatibus voluptatum dolores ipsam cumque veniam accusantium. Ea, ipsam iusto? Doloribus fugit autem distinctio. Eveniet error autem natus odit illo maxime possimus, minus quasi iusto nemo, sit consequatur fuga soluta, odio saepe itaque deserunt. Ducimus tempore natus ratione consequuntur laborum libero quia hic repudiandae numquam nulla? Saepe quos est totam obcaecati perspiciatis expedita minima debitis, reprehenderit repudiandae, modi libero ipsa hic tempore numquam quisquam ad ipsam at deleniti, officia neque placeat quibusdam dolorem officiis! Aspernatur natus obcaecati voluptatum officiis accusamus optio, facere beatae alias, nobis voluptatem assumenda. Id reiciendis, amet saepe magni commodi deleniti omnis vero fugiat quos. Aut earum in consequatur vitae tempora sequi deleniti rem quo. Cumque ipsa nostrum dicta perferendis recusandae excepturi! Ut labore laborum asperiores reiciendis soluta, libero cupiditate. Earum, tempore rem. Odio, ipsum quas! Molestiae harum quae ex officiis distinctio hic dolor, accusamus possimus cupiditate veniam suscipit sapiente quas commodi voluptatem quidem voluptates ad quibusdam maxime perspiciatis. Ipsum eos vero commodi aperiam libero obcaecati iste, ullam nam perspiciatis optio hic, doloribus rem molestiae error quis eum veritatis nesciunt similique quod. Hic dignissimos praesentium a sunt totam magnam eum sed architecto pariatur excepturi unde deleniti sapiente enim eveniet est vitae quidem, perferendis quos perspiciatis vero consequuntur. Consectetur impedit recusandae officiis sint magnam illum! Quo repudiandae est facilis voluptate nesciunt natus odio sequi, accusantium labore cupiditate totam. Eaque alias amet exercitationem officiis ratione cupiditate officia quis, animi omnis veritatis facere recusandae perspiciatis aperiam perferendis quam rem dolorum explicabo asperiores nihil ea! Facilis fuga praesentium cum, exercitationem possimus, placeat excepturi ratione blanditiis distinctio aliquam accusamus modi, quod aut optio corporis nemo ipsum? Beatae, corporis reiciendis officia non possimus dignissimos repellendus! Consectetur ipsum ab soluta excepturi illo eaque commodi nemo totam inventore. Quo porro labore mollitia tempore incidunt neque debitis ad nemo id nisi minima voluptas consectetur, perferendis temporibus distinctio? Maiores consectetur nihil fuga magni consequuntur quidem deserunt porro saepe vero. Optio mollitia repudiandae voluptate quis voluptatem, inventore aut saepe expedita maxime aliquam voluptates laudantium vero quae odio?`,
-};
-const About: FC<{ desc: string }> = ({ desc }) => {
-  const [expanded, setExpanded] = useState(false);
-  const [descState, setDescState] = useState(desc?.slice(0, 600));
-
-  return (
-    <>
-      <div>
-        {desc?.length > 200 ? (
-          <>
-            {/* {descState} */}
-            <div dangerouslySetInnerHTML={{ __html: descState }}></div>
-            {expanded ? (
-              <>
-                <a
-                  href="#about"
-                  className={css.expand_link}
-                  onClick={() => {
-                    setExpanded(false);
-                    setDescState(desc.slice(0, 600));
-                  }}
-                >
-                  {" "}
-                  See less
-                </a>
-              </>
-            ) : (
-              <>
-                <a
-                  href="#about"
-                  className={css.expand_link}
-                  onClick={() => {
-                    setExpanded(true);
-                    setDescState(desc);
-                  }}
-                >
-                  ...See more
-                </a>
-              </>
-            )}
-          </>
-        ) : (
-          <div dangerouslySetInnerHTML={{ __html: desc }}></div>
-        )}
-      </div>
-    </>
-  );
 };
 
 const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
@@ -274,20 +229,6 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
         props: { maxWidth: "sm", open: true, fullWidth: true },
       })
     );
-  };
-
-  const convertAboutDescriptionToHTML = (
-    description: DescriptionType | undefined
-  ) => {
-    if (description) {
-      try {
-        return draftToHtml(JSON.parse(description.raw));
-      } catch (error: any) {
-        return description.text;
-      }
-    } else {
-      return "";
-    }
   };
 
   useEffect(() => {
@@ -452,10 +393,8 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
           )}
           <span>About</span>
           {orphanageDetails?.details?.about ? (
-            <About
-              desc={convertAboutDescriptionToHTML(
-                orphanageDetails.details.about
-              )}
+            <Collapsible
+              desc={convert_textblock_to_html(orphanageDetails.details.about)}
             />
           ) : (
             <div className={css.placeholder}>
@@ -485,9 +424,9 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
                 <iframe
                   src={
                     "https://maps.google.com/maps?q=" +
-                    position.lat +
+                    orphanageDetails.details.location?.lat +
                     "," +
-                    position.lng +
+                    orphanageDetails.details.location?.lng +
                     "&t=&z=15&ie=UTF8&iwloc=&output=embed"
                   }
                   width="600"
@@ -508,7 +447,14 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
           )}
           <span>Projects</span>
           {orphanageDetails?.details?.projects?.length > 0 ? (
-            "Projects"
+            <>
+              {orphanageDetails.details.projects.map((project) => (
+                <EachProject
+                  project={project}
+                  is_user={orphanageDetails.metadata.isUser ? true : false}
+                />
+              ))}
+            </>
           ) : (
             <div className={css.placeholder}>
               {orphanageDetails.metadata.isUser

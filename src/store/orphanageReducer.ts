@@ -47,6 +47,7 @@ const orphanageDetailsSlice = createSlice({
       state.details.tagline = payload.tagline;
       state.details.website = payload.website;
       state.details.metadata.cover_image = payload.metadata.cover_image;
+      state.details.projects = payload.projects;
     },
     editAbout: (
       state,
@@ -146,6 +147,7 @@ export const fetchOrphanageDetailsAction = (id: string) => {
       if (response.status === 200) {
         // Set the loading, isUser and error states to false and fill up the orphanage details with the response data
         dispatch(orphanageDetailsActions.fillUserDetails(response.data));
+        console.log("Response data", response.data);
         dispatch(orphanageDetailsActions.toogleFetching(false));
         dispatch(
           orphanageDetailsActions.toogleIsUser(
@@ -157,13 +159,6 @@ export const fetchOrphanageDetailsAction = (id: string) => {
             state: false,
             error: undefined,
           })
-        );
-        console.log(
-          "Header value: ",
-          response.status,
-          response?.config,
-          response.headers,
-          response.headers.toJSON && (response as any).headers.toJSON()
         );
       } else {
         // Set the loading state to false, but the error state to true

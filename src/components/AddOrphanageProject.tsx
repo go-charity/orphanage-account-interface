@@ -35,6 +35,8 @@ import {
   convertToRaw,
 } from "draft-js";
 import htmlToDraft from "html-to-draftjs";
+import useAjaxRequest from "use-ajax-request";
+import { orphanageBackendInstance } from "@/utils/interceptors";
 
 const EachImage: FC<{
   image: OrphanageProjectImageType;
@@ -289,7 +291,6 @@ const AddEditOrphanageProject = () => {
     value ? true : false && !isNaN(Number(value))
   );
   const [images, setImages] = useState<OrphanageProjectImageType[]>([]);
-  const [imagesIsValid, setImagesIsValid] = useState(images.length > 0);
   const {
     value: projectDescription,
     isValid: projectDescriptionIsValid,
@@ -333,30 +334,64 @@ const AddEditOrphanageProject = () => {
       projectNameIsValid && projectGoalIsValid && projectDescriptionIsValid,
   });
 
-  const submitHandler = () => {
-    console.log("FORM IS VALID", formIsValid);
-    console.log("description text", projectDescription?.text);
+  const {
+    sendRequest: create_project,
+    error: error_creating_project,
+    loading,
+    resetError,
+  } = useAjaxRequest({
+    instance: orphanageBackendInstance,
+    config: {
+      url: "/v1/project",
+      method: "POST",
+    },
+  });
+
+  const submitHandler = async () => {
+    // * If the project is being created/the API request is being sent, don't execute anything else
+    if (loading) return;
+
+    // * If the fields to be filled are incomplete
     if (!formIsValid) return executeBlurHandlers();
 
-    // TODO: SEND A POST REQUEST TO API ENDPOINT
+    // * SEND A POST REQUEST TO API ENDPOINT
+    const data_to_post = new FormData();
 
-    // * UPDATE ORPHANAGE DETAILS STORE
-    dispatch(
-      orphanageDetailsActions.addProject(
-        new OrphanageProjectClass(
-          images.map((eachImage) => URL.createObjectURL(eachImage.file)),
-          projectName || "",
-          projectDescription || new EditorContentClass("", ""),
-          Number(projectGoal) || 0
-        )
-      )
+    // * Add each image to the list of images to be uploaded
+    images.forEach((img) => {
+      data_to_post.append("images", img.file);
+    });
+
+    // * Append the rest of the project data to be uploaded
+    data_to_post.append("name", projectName || "");
+    data_to_post.append("description", JSON.stringify(projectDescription));
+    data_to_post.append("goal", projectGoal || "0");
+
+    // * Send the post request to the add project endpoint
+    await create_project(
+      // * If the project was created successfully
+      () => {
+        // * UPDATE ORPHANAGE DETAILS STORE
+        dispatch(
+          orphanageDetailsActions.addProject(
+            new OrphanageProjectClass(
+              images.map((eachImage) => URL.createObjectURL(eachImage.file)),
+              projectName || "",
+              projectDescription || new EditorContentClass("", ""),
+              Number(projectGoal) || 0
+            )
+          )
+        );
+
+        // * RESET THE FORM
+        reset();
+
+        // * CLOSE THE MODAL
+        dispatch(modalActions.hide());
+      },
+      () => {},
+      data_to_post
     );
-
-    // * RESET THE FORM
-    reset();
-
-    // * CLOSE THE MODAL
-    dispatch(modalActions.hide());
   };
 
   return (
@@ -419,10 +454,23 @@ const AddEditOrphanageProject = () => {
         <Button onClick={closeModal} color="error">
           Cancel
         </Button>
-        <Button onClick={submitHandler} color="success" disabled={false}>
-          {false ? "Adding..." : "Add project"}
+        <Button onClick={submitHandler} color="success" disabled={loading}>
+          {loading ? "Adding..." : "Add project"}
         </Button>
       </DialogActions>
+      {error_creating_project && (
+        <>
+          <Snackbar
+            open={error_creating_project ? true : false}
+            autoHideDuration={1000 * 6}
+            onClose={resetError}
+          >
+            <Alert onClose={resetError} severity="error">
+              Something went wrong
+            </Alert>
+          </Snackbar>
+        </>
+      )}
     </>
   );
 };

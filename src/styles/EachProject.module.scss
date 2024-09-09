@@ -1,0 +1,76 @@
+@import "./config.scss";
+
+.each_project {
+    width: 100%;
+    border-radius: 10px;
+    @include flex(center, center, 1rem, column);
+    position: relative;
+
+    & > * {
+        width: 100%;
+    }
+    .edit {
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 40px;
+        height: 40px;
+        z-index: 1;
+    }
+    .img_container {
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+    .each_img {
+        width: inherit;
+        height: 400px;
+        object-fit: cover;
+        object-position: top center;
+    }
+    .content_container {
+        background-color: $pink-50;
+        border-radius: 10px;
+        padding: 1rem;
+        @include flex(start, start, 0.7rem, column);
+        & > div {
+            width: 100%;
+        }
+        .title {
+            display: block;
+            font-size: 28px;
+        }
+        ul {
+            margin-left: 1rem;
+        }
+        .action {
+            @include flex(start, start, 0.7rem, column);
+            & > div {
+                width: 100%;
+            }
+            .donate {
+                width: 170px;
+                height: 40px;
+                background: $pink-900;
+                color: $pink-50;
+                @include flex(center, start, 1rem);
+                i {
+                    font-size: 20px;
+                }
+                span {
+                    font-size: 18px;
+                }
+                &:hover {
+                    background: $pink-700;
+                }
+            }
+            .goal_container {
+                font-size: 18px;
+                color: lighten(black, 40%);
+                .amount_raised {
+                    font-size: 22px;
+                }
+            }
+        }
+    }
+}

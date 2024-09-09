@@ -1,4 +1,5 @@
-import { SocialMediaHandleTypesType } from "@/types";
+import { DescriptionType, SocialMediaHandleTypesType } from "@/types";
+import draftToHtml from "draftjs-to-html";
 
 export class SocialMediaHandleClass {
   constructor(public type: SocialMediaHandleTypesType, public link: string) {}
@@ -36,3 +37,22 @@ export const convertTobase64 = (value: string) =>
  */
 export const convertFrombase64 = (value: string) =>
   Buffer.from(value, "base64").toString("utf-8");
+
+/**
+ * Function to convert text block contents to HTM:
+ * @param description The textbox content to be converted to HTML
+ * @returns HTML string
+ */
+export const convert_textblock_to_html = (
+  description: DescriptionType | undefined
+) => {
+  if (description) {
+    try {
+      return draftToHtml(JSON.parse(description.raw));
+    } catch (error: any) {
+      return description.text;
+    }
+  } else {
+    return "";
+  }
+};
