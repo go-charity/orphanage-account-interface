@@ -36,6 +36,7 @@
             .thumbnail_container {
                 width: 100%;
                 max-width: 80vw;
+                overflow: auto;
                 @include flex(center, start, 0.5rem);
                 .thumbnail {
                     width: 100px;
