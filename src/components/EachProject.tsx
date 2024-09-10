@@ -9,6 +9,29 @@ import { EditIcon } from "./CustomIcons";
 import Donate from "./Donate";
 import DonateButton from "./Donate";
 
+const ImageCarousel: FC<{ images: string[] }> = ({ images }) => {
+  const [currImg, setCurrImg] = useState(images[0]);
+
+  return (
+    <div className={css.img_carousel}>
+      <img src={currImg} alt="img" className={css.curr_img} />
+      <div className={css.thumbnail_container}>
+        {images.map((img, i) => (
+          <>
+            <img
+              src={img}
+              key={i}
+              alt={i.toString()}
+              className={css.thumbnail}
+              onClick={() => setCurrImg(img)}
+            />
+          </>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const EachProject: FC<{ project: OrphanageProjectType; is_user: boolean }> = ({
   project,
   is_user,
@@ -19,7 +42,12 @@ const EachProject: FC<{ project: OrphanageProjectType; is_user: boolean }> = ({
         <EditIcon className={css.edit} background onClick={() => {}} />
       )}
       <div className={css.img_container}>
-        <Slider images={project.images} imageClassName={css.each_img} />
+        <Slider
+          images={project.images}
+          className={css.slider}
+          imageClassName={css.each_img}
+        />
+        <ImageCarousel images={project.images} />
       </div>
       <div className={css.content_container}>
         <span className={css.title}>{project.name}</span>

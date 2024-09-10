@@ -17,10 +17,51 @@
         z-index: 1;
     }
     .img_container {
-        width: 100%;
+        width: inherit;
         height: 400px;
         overflow: hidden;
         border-radius: 10px;
+
+        .img_carousel {
+            display: none;
+            width: 100%;
+            .curr_img {
+                width: 100%;
+                height: 300px;
+                object-fit: contain;
+                object-position: top center;
+                display: block;
+                border-radius: 5px;
+                transition: 500ms;
+            }
+            .thumbnail_container {
+                width: 100%;
+                @include flex(center, start, 0.5rem);
+                .thumbnail {
+                    width: 100px;
+                    height: 70px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    object-fit: contain;
+                    object-position: top center;
+                }
+            }
+        }
+
+        @include media(max, 800px) {
+            height: auto;
+            border-radius: 0;
+            .slider {
+                display: none;
+            }
+            .img_carousel {
+                @include flex(start, start, 0.5rem, column);
+
+                & > * {
+                    width: 100%;
+                }
+            }
+        }
     }
     .each_img {
         width: inherit;

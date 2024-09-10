@@ -25,11 +25,15 @@ const Slider: FC<
       className={`${css.swiper} ${className}`}
       {...props}
     >
-      {images.map((image) => (
-        <SwiperSlide className={css.swiper_slide}>
-          <img src={image} alt="img" className={imageClassName} />
-        </SwiperSlide>
-      ))}
+      <div>
+        {images.map((image) => (
+          <>
+            <SwiperSlide className={css.swiper_slide}>
+              <img src={image} alt="img" className={imageClassName} />
+            </SwiperSlide>
+          </>
+        ))}
+      </div>
     </Swiper>
   );
 };

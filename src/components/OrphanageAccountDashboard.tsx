@@ -448,10 +448,12 @@ const OrphanageAccountDashboard: FC<{ id: string }> = ({ id }) => {
           {orphanageDetails?.details?.projects?.length > 0 ? (
             <>
               {orphanageDetails.details.projects.map((project) => (
-                <EachProject
-                  project={project}
-                  is_user={orphanageDetails.metadata.isUser ? true : false}
-                />
+                <>
+                  <EachProject
+                    project={project}
+                    is_user={orphanageDetails.metadata.isUser ? true : false}
+                  />
+                </>
               ))}
             </>
           ) : (
