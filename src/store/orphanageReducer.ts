@@ -84,13 +84,13 @@ const orphanageDetailsSlice = createSlice({
       { payload }: { payload: SocialMediaHandleClass }
     ) => {
       const index = state.details.social_media_handles.findIndex(
-        (handle) => payload.type === handle.type
+        (handle) => payload.name === handle.name
       );
 
       if (index === -1) return;
 
       state.details.social_media_handles[index] = {
-        type: payload.type,
+        name: payload.name,
         link: payload.link,
       };
     },
@@ -100,7 +100,7 @@ const orphanageDetailsSlice = createSlice({
     deleteSocialMediaHandle: (state, { payload }: { payload: string }) => {
       state.details.social_media_handles =
         state.details.social_media_handles.filter(
-          (handle) => handle.type !== payload
+          (handle) => handle.name !== payload
         );
     },
     toogleFetching: (state, { payload }: { payload: boolean }) => {

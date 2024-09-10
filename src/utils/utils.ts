@@ -1,8 +1,8 @@
-import { DescriptionType, SocialMediaHandleTypesType } from "@/types";
+import { DescriptionType, SocialMediaHandleNamesType } from "@/types";
 import draftToHtml from "draftjs-to-html";
 
 export class SocialMediaHandleClass {
-  constructor(public type: SocialMediaHandleTypesType, public link: string) {}
+  constructor(public name: SocialMediaHandleNamesType, public link: string) {}
 }
 
 export class ProjectImage {

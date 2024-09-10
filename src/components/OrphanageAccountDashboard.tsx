@@ -46,11 +46,11 @@ const SocialMediaHandles: FC<{ handle: SocialMediaHandleClass }> = ({
   return (
     <a
       href={handle.link}
-      title={handle.type}
+      title={handle.name}
       className={css.social_media_handle}
       target="_blank"
     >
-      <i className={`fa-brands fa-${handle.type}`}></i>
+      <i className={`fa-brands fa-${handle.name}`}></i>
     </a>
   );
 };

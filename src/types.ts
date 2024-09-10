@@ -2,7 +2,7 @@ import { DialogProps } from "@mui/material";
 import React from "react";
 import { EditorContentClass, SocialMediaHandleClass } from "./utils/utils";
 
-export type SocialMediaHandleTypesType =
+export type SocialMediaHandleNamesType =
   | "twitter"
   | "facebook"
   | "whatsapp"

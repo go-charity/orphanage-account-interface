@@ -2,7 +2,7 @@ import { modalActions, orphanageDetailsActions } from "@/store/store";
 import {
   ModalReducerType,
   SelectorType,
-  SocialMediaHandleTypesType,
+  SocialMediaHandleNamesType,
 } from "@/types";
 import {
   Alert,
@@ -33,13 +33,13 @@ const AddNewSocialMediaHandle: FC = () => {
   const [displayForm, setDisplayForm] = useState(false);
   const dispatch = useDispatch();
   const {
-    value: handleType,
-    isValid: typeIsValid,
-    inputIsInValid: typeInputIsInvalid,
-    onChange: onTypeChange,
-    onBlur: onTypeBlur,
-    reset: resetType,
-  } = useInput<SocialMediaHandleTypesType>((value) =>
+    value: handleName,
+    isValid: nameIsValid,
+    inputIsInValid: nameInputIsInvalid,
+    onChange: onNameChange,
+    onBlur: onNameBlur,
+    reset: resetName,
+  } = useInput<SocialMediaHandleNamesType>((value) =>
     value
       ? /(twitter|facebook|linkedin|whatsapp|instagram)/i.test(value?.trim())
       : false
@@ -56,9 +56,9 @@ const AddNewSocialMediaHandle: FC = () => {
   );
 
   const { formIsValid, reset, executeBlurHandlers } = useForm({
-    blurHandlers: [onLinkBlur, onTypeBlur],
-    resetHandlers: [resetLink, resetType],
-    validateOptions: () => typeIsValid && linkIsValid,
+    blurHandlers: [onLinkBlur, onNameBlur],
+    resetHandlers: [resetLink, resetName],
+    validateOptions: () => nameIsValid && linkIsValid,
   });
 
   const {
@@ -75,7 +75,7 @@ const AddNewSocialMediaHandle: FC = () => {
       url: "/v1/edit/social-media-handles",
       data: [
         {
-          type: handleType,
+          name: handleName,
           link: link,
         },
       ],
@@ -91,11 +91,11 @@ const AddNewSocialMediaHandle: FC = () => {
 
     if (!loading)
       await createHandle((res) => {
-        handleType &&
+        handleName &&
           link &&
           dispatch(
             orphanageDetailsActions.addSocialMediaHandle({
-              type: handleType,
+              name: handleName,
               link: link,
             })
           );
@@ -103,7 +103,7 @@ const AddNewSocialMediaHandle: FC = () => {
       });
   };
 
-  const availableTypes: SocialMediaHandleTypesType[] = [
+  const availableTypes: SocialMediaHandleNamesType[] = [
     "facebook",
     "instagram",
     "linkedin",
@@ -127,18 +127,18 @@ const AddNewSocialMediaHandle: FC = () => {
         <Autocomplete
           disablePortal
           id="combo-box-demo"
-          value={handleType}
-          onChange={(e, value) => onTypeChange(value)}
-          onBlur={onTypeBlur as any}
+          value={handleName}
+          onChange={(e, value) => onNameChange(value)}
+          onBlur={onNameBlur as any}
           options={availableTypes}
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Type"
-              placeholder="Enter the type of social media handle..."
-              error={typeInputIsInvalid}
+              label="Name"
+              placeholder="Enter the name of social media handle..."
+              error={nameInputIsInvalid}
               helperText={
-                typeInputIsInvalid &&
+                nameInputIsInvalid &&
                 "Input must equal one of the available handle types"
               }
             />
@@ -259,11 +259,11 @@ const SocialMediaHandleItem: FC<{
       >
         <ListItemAvatar>
           <Avatar className={css.avatar}>
-            <i className={`fa-brands fa-${socialMediaHandle.type}`} />
+            <i className={`fa-brands fa-${socialMediaHandle.name}`} />
           </Avatar>
         </ListItemAvatar>
         <ListItemText
-          primary={socialMediaHandle.type}
+          primary={socialMediaHandle.name}
           secondary={socialMediaHandle.link}
         />
       </ListItem>
@@ -332,7 +332,7 @@ const EditSocialMediaHandle: FC<{
       url: "/v1/edit/social_media_handles",
       data: [
         {
-          type: socialMediaHandle.type,
+          name: socialMediaHandle.name,
           link: link,
         },
       ],
@@ -351,7 +351,7 @@ const EditSocialMediaHandle: FC<{
         link &&
           dispatch(
             orphanageDetailsActions.editSocialMediaHandle({
-              type: socialMediaHandle.type,
+              name: socialMediaHandle.name,
               link: link,
             })
           );
@@ -368,8 +368,8 @@ const EditSocialMediaHandle: FC<{
       <div className={css.edit_new_social_media_handler}>
         <h4>Edit handle</h4>
         <span className={css.type}>
-          <i className={`fa-brands fa-${socialMediaHandle.type}`} />{" "}
-          {socialMediaHandle.type}
+          <i className={`fa-brands fa-${socialMediaHandle.name}`} />{" "}
+          {socialMediaHandle.name}
         </span>
         <TextField
           label="URL"
