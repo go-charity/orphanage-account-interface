@@ -1,10 +1,8 @@
-FROM node:gallium-alpine
+FROM node:18-alpine
 
 WORKDIR /app
 
 COPY ./package.json ./
-#! rm
-run ls
 
 RUN npm install -f
 
@@ -18,6 +16,8 @@ ENV NEXT_PUBLIC_GOCHARITY_API_DOMAIN=https://account.gocharity.com.ng
 ENV GOCHARITY_API_DOMAIN=https://account-server.gocharity.com.ng
 ENV API_DOMAIN=account.gocharity.com.ng
 
+RUN npm run build
+
 EXPOSE 3000
 
-CMD ["npm", "run", "docker:start"]
+CMD ["npm", "run", "start"]

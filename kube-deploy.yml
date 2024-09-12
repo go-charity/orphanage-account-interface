@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orphanage-client-deployment
+  labels:
+    obj: deployment
+    app: orphanage-client
+spec:
+  selector:
+    matchLabels:
+      obj: pod
+      app: orphanage-client
+  replicas: 1
+  template:
+    metadata:
+      name: orphanage-client-pod
+      labels:
+        obj: pod
+        app: orphanage-client
+    spec:
+      containers:
+      - name: orphanage-client-container
+        image: gocharity/orphanage-client:latest
+        resources:
+          requests:
+            memory: 10Mi
+            cpu: 150m
+          limits:
+            memory: 20Mi
+            cpu: 250m
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orphanage-client-service
+  labels:
+    obj: service
+    app: orphanage-client
+spec:
+  selector:
+    obj: pod
+    app: orphanage-client
+  ports:
+  - port: 3002
+    targetPort: 3000
+    protocol: "TCP"
+  type: LoadBalancer
